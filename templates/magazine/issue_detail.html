@@ -1,0 +1,16 @@
+{% extends 'magazine/magazine_base.html' %}
+{% load url from future %}
+
+{% block contents %}
+
+<h1>{{ issue }} ({{ issue.month_year }})</h1>
+
+{% for article in articles %}
+    <h2><a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title }}</a></h2>
+    <p>{{ article.teaser }}</p>
+    <p><em>By {{ article.author }}</em></p>
+{% empty %}
+    <p>There are no articles in this issue.</p>
+{% endfor %}
+
+{% endblock %}

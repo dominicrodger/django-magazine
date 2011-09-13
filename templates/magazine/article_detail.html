@@ -1,0 +1,11 @@
+{% extends 'magazine/magazine_base.html' %}
+
+{% block contents %}
+<p><a href="{{ issue.get_absolute_url }}" title="Back to {{ issue }}" class="issue_back_button">&laquo; Back to {{ issue }}</a></p>
+<h1>{{ article.title }}</h1>
+
+<p class="magazine_author_tag"><em>By {{ article.author }}</em></p>
+
+<p>{{ article.text|linebreaks }}</p>
+
+{% endblock %}
