@@ -78,3 +78,6 @@ class Article(models.Model):
 
     def get_absolute_url(self):
         return reverse('article_detail', args=[self.issue.number,self.pk,])
+
+    class Meta:
+        ordering = ('-issue', 'order_in_issue',)

@@ -86,6 +86,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.article_1 = Article.objects.get(pk = 1)
         self.article_2 = Article.objects.get(pk = 2)
         self.article_3 = Article.objects.get(pk = 3)
+        self.article_4 = Article.objects.get(pk = 4)
         self.issue_1 = Issue.objects.get(pk = 1)
         self.issue_2 = Issue.objects.get(pk = 2)
         self.issue_3 = Issue.objects.get(pk = 3)
@@ -125,6 +126,21 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('issue_detail', args=[1]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
+        self.assertEqual(list(response.context['articles']), [self.article_1, self.article_2])
+
+        # Check that changing the order of the articles in an issue affects the
+        # order they are rendered.
+        old_order_in_issue = self.article_1.order_in_issue
+        self.article_1.order_in_issue = 5
+        self.article_1.save()
+
+        response = self.client.get(reverse('issue_detail', args=[1]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['issue'], self.issue_1)
+        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_1])
+
+        self.article_1.order_in_issue = old_order_in_issue
+        self.article_1.save()
 
         # Check that trying to fetch an issue that isn't yet published
         # results in a 404
@@ -142,11 +158,13 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('issue_detail', args=[2]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_3)
+        self.assertEqual(list(response.context['articles']), [self.article_4,])
         self.client.logout()
 
         response = self.client.get(reverse('issue_detail', args=[3]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_2)
+        self.assertEqual(list(response.context['articles']), [self.article_3,])
 
         response = self.client.get(reverse('issue_detail', args=[4]))
         self.assertEqual(response.status_code, 404)
