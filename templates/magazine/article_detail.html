@@ -8,4 +8,8 @@
 
 {{ article.text|linebreaks }}
 
+{% if article.author.details %}
+<div class="about_the_author">{{ article.author.details|linebreaks }}</div>
+{% endif %}
+
 {% endblock %}

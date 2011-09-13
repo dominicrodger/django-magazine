@@ -7,6 +7,7 @@ from django.utils.text import truncate_words
 class Author(models.Model):
     forename = models.CharField(max_length = 100, help_text = u'The author\'s forename')
     surname = models.CharField(max_length = 100, help_text = u'The author\'s surname')
+    details = models.TextField(blank = True, null = True, help_text = u'Details about the author')
 
     def __unicode__(self):
         return u'{0} {1}'.format(self.forename, self.surname)

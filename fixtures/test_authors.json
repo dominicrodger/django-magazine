@@ -12,7 +12,8 @@
     "model": "magazine.author",
     "fields": {
       "forename": "Dominic",
-      "surname": "Rodger"
+      "surname": "Rodger",
+      "details": "The developer of django-magazine."
     }
   }
 ]

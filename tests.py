@@ -227,3 +227,6 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(response.context['article'], self.article_2)
         self.assertContains(response, self.article_2.text)
+        # Check that the author details show up (if they exist)
+        self.assertContains(response, self.article_2.author)
+        self.assertContains(response, self.article_2.author.details)
