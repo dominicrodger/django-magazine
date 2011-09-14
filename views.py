@@ -1,8 +1,9 @@
+from datetime import date
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
-from magazine.models import Article, Issue
+from magazine.models import Article, Issue, Author
 
 class CurrentIssueListView(ListView):
     template_name = 'magazine/current_issue.html'
@@ -30,7 +31,7 @@ class IssueView(DetailView):
         issue = self.get_object()
         context['articles'] = Article.objects.filter(issue = issue)
         return context
-    
+
     def get_queryset(self):
         if self.request.user.is_staff:
             return Issue.objects.all()
@@ -78,4 +79,31 @@ class ArticleView(DetailView):
             obj.mark_visited()
             return obj
         except Article.DoesNotExist:
+            raise Http404
+
+class AuthorDetailView(DetailView):
+    template_name = 'magazine/author_detail.html'
+    context_object_name = 'author'
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        author = self.get_object()
+        qs = Article.objects.filter(author = author)
+
+        if not self.request.user.is_staff:
+            qs = qs.filter(issue__published = True, issue__issue_date__lte = date.today())
+
+        context['articles'] = qs
+        return context
+
+    def get_queryset(self):
+        return Author.objects.all()
+
+    def get_object(self, queryset = None):
+        if not queryset:
+            queryset = self.get_queryset()
+
+        try:
+            return queryset.get(pk = int(self.kwargs['pk']))
+        except Author.DoesNotExist:
             raise Http404

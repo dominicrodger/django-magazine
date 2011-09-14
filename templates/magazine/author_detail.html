@@ -1,15 +1,15 @@
 {% extends 'magazine/magazine_base.html' %}
 
 {% block contents %}
+<h1>{{ author }}</h1>
 
-<h1>{{ issue }} ({{ issue.month_year }})</h1>
+{% if author.details %}
+    {{ author.details|linebreaks }}
+{% endif %}
 
 {% for article in articles %}
     <h2><a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title }}</a></h2>
     <p>{{ article.teaser }}</p>
-    <p><em>By <a href="{{ article.author.get_absolute_url }}" title="View other articles by {{ article.author }}">{{ article.author }}</a></em></p>
-{% empty %}
-    <p>There are no articles in this issue.</p>
 {% endfor %}
 
 {% endblock %}

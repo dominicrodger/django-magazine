@@ -15,6 +15,10 @@ class AuthorTestCase(TestCase):
         self.assertEqual(self.paul.__unicode__(), u'Paul Beasley-Murray')
         self.assertEqual(self.dom.__unicode__(), u'Dominic Rodger')
 
+    def testGetURL(self):
+        self.assertEqual(self.paul.get_absolute_url(), reverse('author_detail', args=[self.paul.pk,]))
+        self.assertEqual(self.dom.get_absolute_url(), reverse('author_detail', args=[self.dom.pk,]))
+
 class IssueTestCase(TestCase):
     fixtures = ['test_issues.json',]
 
@@ -90,6 +94,8 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.issue_1 = Issue.objects.get(pk = 1)
         self.issue_2 = Issue.objects.get(pk = 2)
         self.issue_3 = Issue.objects.get(pk = 3)
+        self.author_1 = Author.objects.get(pk = 1)
+        self.author_2 = Author.objects.get(pk = 2)
 
         if not hasattr(self, 'staff_user'):
             self.staff_user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
@@ -127,6 +133,10 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(list(response.context['articles']), [self.article_1, self.article_2])
+        self.assertContains(response, self.article_1.author.__unicode__())
+        self.assertContains(response, self.article_2.author.__unicode__())
+        self.assertContains(response, self.article_1.author.get_absolute_url())
+        self.assertContains(response, self.article_2.author.get_absolute_url())
 
         # Check that changing the order of the articles in an issue affects the
         # order they are rendered.
@@ -230,3 +240,40 @@ class MagazineGeneralViewsTestCase(TestCase):
         # Check that the author details show up (if they exist)
         self.assertContains(response, self.article_2.author)
         self.assertContains(response, self.article_2.author.details)
+        self.assertContains(response, self.article_2.author.get_absolute_url())
+
+    def testAuthorDetailView(self):
+        response = self.client.get(reverse('author_detail', args=[1,]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['author'], self.author_1)
+        self.assertEqual(list(response.context['articles']), [self.article_1,])
+        self.assertContains(response, u'Paul Beasley-Murray')
+        self.assertContains(response, self.article_1.get_absolute_url())
+
+        response = self.client.get(reverse('author_detail', args=[2,]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['author'], self.author_2)
+        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3,])
+        self.assertContains(response, u'Dominic Rodger')
+        self.assertNotContains(response, self.article_1.get_absolute_url())
+        self.assertContains(response, self.article_2.get_absolute_url())
+        self.assertContains(response, self.article_3.get_absolute_url())
+
+        response = self.client.get(reverse('author_detail', args=[3,]))
+        self.assertEqual(response.status_code, 404)
+
+        # Check that you can't see articles from unpublished issues if you're
+        # logged in as a regular user
+        self.client.login(username='ringo', password='ringopassword')
+        response = self.client.get(reverse('author_detail', args=[2,]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3,])
+        self.client.logout()
+
+        # Check that you can see articles from unpublished issues if you're
+        # logged in as a staff member
+        self.client.login(username='john', password='johnpassword')
+        response = self.client.get(reverse('author_detail', args=[2,]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_4])
+        self.client.logout()

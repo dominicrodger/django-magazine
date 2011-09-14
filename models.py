@@ -12,6 +12,9 @@ class Author(models.Model):
     def __unicode__(self):
         return u'{0} {1}'.format(self.forename, self.surname)
 
+    def get_absolute_url(self):
+        return reverse('author_detail', args=[self.pk,])
+
     class Meta:
         ordering = ('surname', 'forename',)
 
