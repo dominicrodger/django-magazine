@@ -9,7 +9,10 @@
 {{ article.text|linebreaks }}
 
 {% if article.author.details %}
-<div class="about_the_author">{{ article.author.details|linebreaks }}</div>
+<div class="about_the_author">
+<h2>{{ article.author }}</h2>
+{{ article.author.details|linebreaks }}
+</div>
 {% endif %}
 
 {% endblock %}
