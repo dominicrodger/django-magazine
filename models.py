@@ -13,7 +13,7 @@ class Author(models.Model):
         return u'{0} {1}'.format(self.forename, self.surname)
 
     def get_absolute_url(self):
-        return reverse('author_detail', args=[self.pk,])
+        return reverse('magazine_author_detail', args=[self.pk,])
 
     class Meta:
         ordering = ('surname', 'forename',)
@@ -41,7 +41,7 @@ class Issue(models.Model):
         return self.issue_date <= date.today() and self.published
 
     def get_absolute_url(self):
-        return reverse('issue_detail', args=[self.number,])
+        return reverse('magazine_issue_detail', args=[self.number,])
 
     @staticmethod
     def current_issue():
@@ -81,7 +81,7 @@ class Article(models.Model):
         return u'None available.'
 
     def get_absolute_url(self):
-        return reverse('article_detail', args=[self.issue.number,self.pk,])
+        return reverse('magazine_article_detail', args=[self.issue.number,self.pk,])
 
     class Meta:
         ordering = ('-issue', 'order_in_issue',)

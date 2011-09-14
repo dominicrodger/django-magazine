@@ -16,8 +16,8 @@ class AuthorTestCase(TestCase):
         self.assertEqual(self.dom.__unicode__(), u'Dominic Rodger')
 
     def testGetURL(self):
-        self.assertEqual(self.paul.get_absolute_url(), reverse('author_detail', args=[self.paul.pk,]))
-        self.assertEqual(self.dom.get_absolute_url(), reverse('author_detail', args=[self.dom.pk,]))
+        self.assertEqual(self.paul.get_absolute_url(), reverse('magazine_author_detail', args=[self.paul.pk,]))
+        self.assertEqual(self.dom.get_absolute_url(), reverse('magazine_author_detail', args=[self.dom.pk,]))
 
 class IssueTestCase(TestCase):
     fixtures = ['test_issues.json',]
@@ -49,8 +49,8 @@ class IssueTestCase(TestCase):
         self.issue_2.save()
 
     def testGetURL(self):
-        self.assertEqual(self.issue_1.get_absolute_url(), reverse('issue_detail', args=[self.issue_1.number,]))
-        self.assertEqual(self.issue_2.get_absolute_url(), reverse('issue_detail', args=[self.issue_2.number,]))
+        self.assertEqual(self.issue_1.get_absolute_url(), reverse('magazine_issue_detail', args=[self.issue_1.number,]))
+        self.assertEqual(self.issue_2.get_absolute_url(), reverse('magazine_issue_detail', args=[self.issue_2.number,]))
 
 class ArticleTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
@@ -80,8 +80,8 @@ class ArticleTestCase(TestCase):
         self.assertEqual(self.article_3.teaser(), u'None available.')
 
     def testGetURL(self):
-        self.assertEqual(self.article_1.get_absolute_url(), reverse('article_detail', args=[self.article_1.issue.number, self.article_1.pk,]))
-        self.assertEqual(self.article_2.get_absolute_url(), reverse('article_detail', args=[self.article_2.issue.number, self.article_2.pk,]))
+        self.assertEqual(self.article_1.get_absolute_url(), reverse('magazine_article_detail', args=[self.article_1.issue.number, self.article_1.pk,]))
+        self.assertEqual(self.article_2.get_absolute_url(), reverse('magazine_article_detail', args=[self.article_2.issue.number, self.article_2.pk,]))
 
 class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
@@ -129,7 +129,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.issue_2.save()
 
     def testIssueDetailView(self):
-        response = self.client.get(reverse('issue_detail', args=[1]))
+        response = self.client.get(reverse('magazine_issue_detail', args=[1]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(list(response.context['articles']), [self.article_1, self.article_2])
@@ -144,7 +144,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.article_1.order_in_issue = 5
         self.article_1.save()
 
-        response = self.client.get(reverse('issue_detail', args=[1]))
+        response = self.client.get(reverse('magazine_issue_detail', args=[1]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(list(response.context['articles']), [self.article_2, self.article_1])
@@ -154,33 +154,33 @@ class MagazineGeneralViewsTestCase(TestCase):
 
         # Check that trying to fetch an issue that isn't yet published
         # results in a 404
-        response = self.client.get(reverse('issue_detail', args=[2]))
+        response = self.client.get(reverse('magazine_issue_detail', args=[2]))
         self.assertEqual(response.status_code, 404)
 
         # ... still doesn't work if you login as a regular user
         self.client.login(username='ringo', password='ringopassword')
-        response = self.client.get(reverse('issue_detail', args=[2]))
+        response = self.client.get(reverse('magazine_issue_detail', args=[2]))
         self.assertEqual(response.status_code, 404)
         self.client.logout()
 
         # ... but does you're logged in as a staff member
         self.client.login(username='john', password='johnpassword')
-        response = self.client.get(reverse('issue_detail', args=[2]))
+        response = self.client.get(reverse('magazine_issue_detail', args=[2]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_3)
         self.assertEqual(list(response.context['articles']), [self.article_4,])
         self.client.logout()
 
-        response = self.client.get(reverse('issue_detail', args=[3]))
+        response = self.client.get(reverse('magazine_issue_detail', args=[3]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_2)
         self.assertEqual(list(response.context['articles']), [self.article_3,])
 
-        response = self.client.get(reverse('issue_detail', args=[4]))
+        response = self.client.get(reverse('magazine_issue_detail', args=[4]))
         self.assertEqual(response.status_code, 404)
 
     def testArticleDetailView(self):
-        response = self.client.get(reverse('article_detail', args=[1, 1]))
+        response = self.client.get(reverse('magazine_article_detail', args=[1, 1]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(response.context['article'], self.article_1)
@@ -188,12 +188,12 @@ class MagazineGeneralViewsTestCase(TestCase):
 
         # Check that we've updated hit counts.
         self.assertEqual(Article.objects.get(pk = self.article_1.pk).hits, 1)
-        response = self.client.get(reverse('article_detail', args=[1, 1]))
+        response = self.client.get(reverse('magazine_article_detail', args=[1, 1]))
         self.assertEqual(Article.objects.get(pk = self.article_1.pk).hits, 2)
 
         # Check for fetching an article for an issue number where
         # the primary key and the issue number don't line up.
-        response = self.client.get(reverse('article_detail', args=[3, 3]))
+        response = self.client.get(reverse('magazine_article_detail', args=[3, 3]))
         self.assertEqual(response.status_code, 200)
         # Issue with pk 2 has number 3
         self.assertEqual(response.context['issue'], self.issue_2)
@@ -201,38 +201,38 @@ class MagazineGeneralViewsTestCase(TestCase):
 
         # Check that fetching an article by the wrong issue number
         # results in a 404.
-        response = self.client.get(reverse('article_detail', args=[2, 2]))
+        response = self.client.get(reverse('magazine_article_detail', args=[2, 2]))
         self.assertEqual(response.status_code, 404)
 
         # Check that fetching an article by a non-existent issue
         # number results in a 404.
-        response = self.client.get(reverse('article_detail', args=[300, 2]))
+        response = self.client.get(reverse('magazine_article_detail', args=[300, 2]))
         self.assertEqual(response.status_code, 404)
 
         # Check that fetching an article that doesn't exist
         # results in a 404.
-        response = self.client.get(reverse('article_detail', args=[1, 200]))
+        response = self.client.get(reverse('magazine_article_detail', args=[1, 200]))
         self.assertEqual(response.status_code, 404)
 
         # Check that fetching an article for an issue that
         # isn't yet published results in a 404.
-        response = self.client.get(reverse('article_detail', args=[2, 4]))
+        response = self.client.get(reverse('magazine_article_detail', args=[2, 4]))
         self.assertEqual(response.status_code, 404)
 
         # ... still doesn't work if you login as a regular user
         self.client.login(username='ringo', password='ringopassword')
-        response = self.client.get(reverse('article_detail', args=[2, 4]))
+        response = self.client.get(reverse('magazine_article_detail', args=[2, 4]))
         self.assertEqual(response.status_code, 404)
         self.client.logout()
 
         # ... but does if you're logged in as a staff member
         self.client.login(username='john', password='johnpassword')
-        response = self.client.get(reverse('article_detail', args=[2, 4]))
+        response = self.client.get(reverse('magazine_article_detail', args=[2, 4]))
         self.assertEqual(response.status_code, 200)
         self.client.logout()
 
         # Check that the full text is rendered
-        response = self.client.get(reverse('article_detail', args=[1, 2]))
+        response = self.client.get(reverse('magazine_article_detail', args=[1, 2]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(response.context['article'], self.article_2)
@@ -243,14 +243,14 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertContains(response, self.article_2.author.get_absolute_url())
 
     def testAuthorDetailView(self):
-        response = self.client.get(reverse('author_detail', args=[1,]))
+        response = self.client.get(reverse('magazine_author_detail', args=[1,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['author'], self.author_1)
         self.assertEqual(list(response.context['articles']), [self.article_1,])
         self.assertContains(response, u'Paul Beasley-Murray')
         self.assertContains(response, self.article_1.get_absolute_url())
 
-        response = self.client.get(reverse('author_detail', args=[2,]))
+        response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['author'], self.author_2)
         self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3,])
@@ -259,13 +259,13 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertContains(response, self.article_2.get_absolute_url())
         self.assertContains(response, self.article_3.get_absolute_url())
 
-        response = self.client.get(reverse('author_detail', args=[3,]))
+        response = self.client.get(reverse('magazine_author_detail', args=[3,]))
         self.assertEqual(response.status_code, 404)
 
         # Check that you can't see articles from unpublished issues if you're
         # logged in as a regular user
         self.client.login(username='ringo', password='ringopassword')
-        response = self.client.get(reverse('author_detail', args=[2,]))
+        response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3,])
         self.client.logout()
@@ -273,7 +273,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         # Check that you can see articles from unpublished issues if you're
         # logged in as a staff member
         self.client.login(username='john', password='johnpassword')
-        response = self.client.get(reverse('author_detail', args=[2,]))
+        response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_4])
         self.client.logout()
