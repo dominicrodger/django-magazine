@@ -1,0 +1,10 @@
+{% extends 'magazine/magazine_base.html' %}
+
+{% block contents %}
+<h1>All Issues</h1>
+
+{% for issue in issues %}
+    <h2><a href="{{ issue.get_absolute_url }}" title="View {{ issue }}">{{ issue }}</a> - {{ issue.issue_date|date:"F Y" }}</h2>
+{% endfor %}
+
+{% endblock %}

@@ -22,6 +22,16 @@ class CurrentIssueListView(ListView):
 
         return Article.objects.filter(issue = live_issue)
 
+class IssueListView(ListView):
+    template_name = 'magazine/issues.html'
+    context_object_name = 'issues'
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Issue.objects.all()
+
+        return Issue.published_objects.all()
+
 class IssueView(DetailView):
     template_name = 'magazine/issue_detail.html'
     context_object_name = 'issue'

@@ -277,3 +277,24 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_4])
         self.client.logout()
+
+    def testIssueListView(self):
+        response = self.client.get(reverse('magazine_issues'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context['issues']), [self.issue_2, self.issue_1])
+
+        # Check that you can't see unpublished issues if you're logged in as a
+        # regular user
+        self.client.login(username='ringo', password='ringopassword')
+        response = self.client.get(reverse('magazine_issues'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context['issues']), [self.issue_2, self.issue_1])
+        self.client.logout()
+
+        # Check that you can see unpublished issues if you're logged in as a
+        # staff member
+        self.client.login(username='john', password='johnpassword')
+        response = self.client.get(reverse('magazine_issues'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context['issues']), [self.issue_3, self.issue_2, self.issue_1])
+        self.client.logout()
