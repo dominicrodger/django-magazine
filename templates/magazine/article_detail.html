@@ -4,7 +4,7 @@
 <p><a href="{{ issue.get_absolute_url }}" title="Back to {{ issue }}" class="issue_back_button">&laquo; Back to {{ issue }}</a></p>
 <h1>{{ article.title }}</h1>
 
-<p class="magazine_author_tag"><em>By {{ article.author }}</em></p>
+<p class="magazine_author_tag"><em>By <a href="{{ article.author.get_absolute_url }}" title="View other articles by {{ article.author }}">{{ article.author }}</a></em></p>
 
 {{ article.text|linebreaks }}
 
