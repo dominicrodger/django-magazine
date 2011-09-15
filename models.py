@@ -55,6 +55,10 @@ class Issue(models.Model):
     class Meta:
         ordering = ('-issue_date',)
 
+class ArticleManager(models.Manager):
+    def get_query_set(self):
+        return super(ArticleManager, self).get_query_set().select_related(u'issue', u'author',)
+
 class Article(models.Model):
     title = models.CharField(max_length = 250)
     subheading = models.CharField(max_length = 250, blank = True, null = True)
@@ -64,6 +68,8 @@ class Article(models.Model):
     hits = models.IntegerField(default = 0)
     issue = models.ForeignKey(Issue)
     order_in_issue = models.PositiveIntegerField(default = 0)
+
+    objects = ArticleManager()
 
     def __unicode__(self):
         return self.title

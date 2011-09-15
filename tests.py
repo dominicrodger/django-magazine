@@ -83,6 +83,13 @@ class ArticleTestCase(TestCase):
         self.assertEqual(self.article_1.get_absolute_url(), reverse('magazine_article_detail', args=[self.article_1.issue.number, self.article_1.pk,]))
         self.assertEqual(self.article_2.get_absolute_url(), reverse('magazine_article_detail', args=[self.article_2.issue.number, self.article_2.pk,]))
 
+    def testFetchingArticleIssuesIsFree(self):
+        articles = Article.objects.all()
+
+        for article in articles:
+            self.assertNumQueries(0, lambda: getattr(article, 'issue'))
+            self.assertNumQueries(0, lambda: getattr(article, 'author'))
+
 class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
 
