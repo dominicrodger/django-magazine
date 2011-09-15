@@ -4,7 +4,7 @@
 <h1>All Issues</h1>
 
 {% for issue in issues %}
-    <h2><a href="{{ issue.get_absolute_url }}" title="View {{ issue }}">{{ issue }}</a> - {{ issue.issue_date|date:"F Y" }}</h2>
+    <h2><a href="{{ issue.get_absolute_url }}" title="View {{ issue }}">{{ issue }}<span class="magazine_list_publish_date"> - {{ issue.issue_date|date:"F Y" }}</span></a></h2>
 {% endfor %}
 
 {% endblock %}
