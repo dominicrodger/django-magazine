@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -70,11 +71,11 @@ class IssueTestCase(TestCase):
         issue_4 = Issue.objects.get(pk = issue.pk)
         self.assertTrue(issue_4.embargoed())
 
-        issue_4.issue_date = subtract_n_months(start_of_month, 1)
+        issue_4.issue_date = subtract_n_months(start_of_month, int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)) - 1)
         issue_4.save()
         self.assertTrue(issue_4.embargoed())
         
-        issue_4.issue_date = subtract_n_months(start_of_month, 2)
+        issue_4.issue_date = subtract_n_months(start_of_month, int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)))
         issue_4.save()
         self.assertFalse(issue_4.embargoed())
 

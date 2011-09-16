@@ -6,6 +6,8 @@ from django.db import models
 from django.db.models import F
 from django.utils.text import truncate_words
 
+EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
+
 class Author(models.Model):
     forename = models.CharField(max_length = 100, help_text = u'The author\'s forename')
     surname = models.CharField(max_length = 100, help_text = u'The author\'s surname')
@@ -73,8 +75,8 @@ class Issue(models.Model):
 
         today = date.today()
 
-        # Figure out if it's at least 2 months old
-        if subtract_n_months(today, 2) < self.issue_date:
+        # Figure out if it's at least EMBARGO_TIME_IN_MONTHS old
+        if subtract_n_months(today, EMBARGO_TIME_IN_MONTHS) < self.issue_date:
             return True
 
         return False
