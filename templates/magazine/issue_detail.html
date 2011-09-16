@@ -4,6 +4,10 @@
 
 <h1>{{ issue }} ({{ issue.month_year }})</h1>
 
+{% if issue.embargoed %}
+<p class="magazine_issue_embargoed">The full text of articles in this issue is only available to subscribers - please register to view the full text.</p>
+{% endif %}
+
 {% for article in articles %}
     <h2><a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title }}</a></h2>
     <p>{{ article.teaser }}</p>
