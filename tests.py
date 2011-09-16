@@ -1,8 +1,9 @@
+from datetime import date, timedelta
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
-from magazine.models import Author, Issue, Article
+from magazine.models import Author, Issue, Article, subtract_n_months
 
 class AuthorTestCase(TestCase):
     fixtures = ['test_authors.json',]
@@ -25,6 +26,7 @@ class IssueTestCase(TestCase):
     def setUp(self):
         self.issue_1 = Issue.objects.get(pk = 1)
         self.issue_2 = Issue.objects.get(pk = 2)
+        self.issue_3 = Issue.objects.get(pk = 3)
 
     def testUnicode(self):
         self.assertEqual(self.issue_1.__unicode__(), u'Issue 1')
@@ -51,6 +53,30 @@ class IssueTestCase(TestCase):
     def testGetURL(self):
         self.assertEqual(self.issue_1.get_absolute_url(), reverse('magazine_issue_detail', args=[self.issue_1.number,]))
         self.assertEqual(self.issue_2.get_absolute_url(), reverse('magazine_issue_detail', args=[self.issue_2.number,]))
+
+    def testFirstOfMonth(self):
+        issue = Issue.objects.create(number = 4, issue_date = date(2010,4,30))
+        issue_4 = Issue.objects.get(pk = issue.pk)
+        self.assertEqual(issue.issue_date, date(2010,4,1))
+
+    def testIssueEmbargoed(self):
+        self.assertFalse(self.issue_1.embargoed())
+        self.assertFalse(self.issue_2.embargoed())
+        self.assertTrue(self.issue_3.embargoed())
+
+        start_of_month = date.today().replace(day = 1)
+
+        issue = Issue.objects.create(number = 4, issue_date = start_of_month - timedelta(days = 20))
+        issue_4 = Issue.objects.get(pk = issue.pk)
+        self.assertTrue(issue_4.embargoed())
+
+        issue_4.issue_date = subtract_n_months(start_of_month, 1)
+        issue_4.save()
+        self.assertTrue(issue_4.embargoed())
+        
+        issue_4.issue_date = subtract_n_months(start_of_month, 2)
+        issue_4.save()
+        self.assertFalse(issue_4.embargoed())
 
 class ArticleTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
@@ -305,3 +331,22 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context['issues']), [self.issue_3, self.issue_2, self.issue_1])
         self.client.logout()
+
+class SubtractNMonthsTestCase(TestCase):
+
+    def testWithDateAtMiddleOfYear(self):
+        self.assertEqual(subtract_n_months(date(2010, 4, 7), 2), date(2010, 2, 7))
+
+    def testWithDateAtEndOfMonth(self):
+        # September only has 30 days
+        self.assertEqual(subtract_n_months(date(2010, 10, 31), 1), date(2010, 9, 30))
+
+    def testWithDateAtBeginningOfYear(self):
+        self.assertEqual(subtract_n_months(date(2010, 1, 31), 1), date(2009, 12, 31))
+
+    def testWithDateAtBeginningOfYearAtEndOfMonth(self):
+        self.assertEqual(subtract_n_months(date(2010, 3, 31), 4), date(2009, 11, 30))
+
+    def testWithMoreThan12Months(self):
+        self.assertEqual(subtract_n_months(date(2010, 3, 31), 25), date(2008, 2, 29))
+        self.assertEqual(subtract_n_months(date(2010, 3, 31), 37), date(2007, 2, 28))

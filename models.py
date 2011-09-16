@@ -1,4 +1,6 @@
+import calendar
 from datetime import date
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import F
@@ -22,6 +24,27 @@ class PublishedIssueManager(models.Manager):
     def get_query_set(self):
         return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte = date.today(), published = True)
 
+def __days_in_month(year, month):
+    d = date(year, month, 1)
+
+    return calendar.monthrange(year, month)[1]
+
+def subtract_n_months(date_val, num_months):
+    # Split the number of months to subtract into months and years
+    year, month = divmod(num_months, 12)
+
+    if date_val.month <= month:
+        year = date_val.year - year - 1
+        month = date_val.month - month + 12
+    else:
+        year = date_val.year - year
+        month = date_val.month - month
+
+    try:
+        return date(year, month, date_val.day)
+    except ValueError:
+        return date(year, month, __days_in_month(year, month))
+
 class Issue(models.Model):
     number = models.PositiveIntegerField(help_text = u'The issue number.', unique = True)
     issue_date = models.DateField(help_text = u'The selected day is ignored - please use the first of the month')
@@ -32,6 +55,10 @@ class Issue(models.Model):
     def __unicode__(self):
         return u'Issue {0}'.format(self.number)
 
+    def save(self, *args, **kwargs):
+        self.issue_date = self.issue_date.replace(day = 1)
+        super(Issue, self).save(*args, **kwargs)
+
     def month_year(self):
         return self.issue_date.strftime(u'%B %Y')
     month_year.admin_order_field = 'issue_date'
@@ -39,6 +66,18 @@ class Issue(models.Model):
 
     def is_published(self):
         return self.issue_date <= date.today() and self.published
+
+    def embargoed(self):
+        if not self.is_published():
+            return True
+
+        today = date.today()
+
+        # Figure out if it's at least 2 months old
+        if subtract_n_months(today, 2) < self.issue_date:
+            return True
+
+        return False
 
     def get_absolute_url(self):
         return reverse('magazine_issue_detail', args=[self.number,])
