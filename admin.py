@@ -7,8 +7,8 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(Author, AuthorAdmin)
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'hits','issue', )
-    search_fields = ('title', 'subheading', 'description', 'details',)
+    list_display = ('title', 'author', 'hits', 'issue',)
+    search_fields = ('title', 'subheading', 'description', 'text',)
     readonly_fields = ('hits',)
 admin.site.register(Article, ArticleAdmin)
 
