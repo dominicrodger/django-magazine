@@ -13,9 +13,10 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(Author, AuthorAdmin)
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'hits', 'issue',)
+    list_display = ('title', 'hits', 'issue',)
     search_fields = ('title', 'subheading', 'description', 'text',)
     readonly_fields = ('hits',)
+    filter_horizontal = ('authors',)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if HAS_TINYMCE and db_field.name in ('text',):

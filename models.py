@@ -104,7 +104,7 @@ class ArticleManager(models.Manager):
 class Article(models.Model):
     title = models.CharField(max_length = 250)
     subheading = models.CharField(max_length = 250, blank = True, null = True)
-    author = models.ForeignKey(Author)
+    authors = models.ManyToManyField(Author)
     description = models.TextField(blank = True, null = True, help_text = u'Introductory paragraph, if any.')
     text = models.TextField(blank = True, null = True, help_text = u'Full text of the article.')
     hits = models.IntegerField(default = 0)
