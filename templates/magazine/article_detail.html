@@ -7,7 +7,7 @@
 <p class="magazine_author_tag"><em>By <a href="{{ article.author.get_absolute_url }}" title="View other articles by {{ article.author }}">{{ article.author }}</a></em></p>
 
 {% if not article.issue.embargoed %}
-{{ article.text|linebreaks }}
+{{ article.text|safe }}
 {% else %}
 <p class="magazine_issue_embargoed">The full text of this article is only available to subscribers - please register to view it.</p>
 <p class="magazine_article_teaser">{{ article.teaser }}</p>

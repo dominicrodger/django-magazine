@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import F
 from django.utils.text import truncate_words
+from django.template.defaultfilters import striptags
 
 EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
 
@@ -123,7 +124,7 @@ class Article(models.Model):
             return self.description
 
         if self.text:
-            return truncate_words(self.text, 50)
+            return truncate_words(striptags(self.text), 50)
 
         return u'None available.'
 
