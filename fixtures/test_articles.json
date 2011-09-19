@@ -38,5 +38,23 @@
       "authors": [2],
       "issue": 3
     }
+  },
+  {
+    "pk": 5,
+    "model": "magazine.article",
+    "fields": {
+      "title": "My third article (by 2 authors)",
+      "authors": [1,2],
+      "issue": 2
+    }
+  },
+  {
+    "pk": 6,
+    "model": "magazine.article",
+    "fields": {
+      "title": "My third article (by 3 authors)",
+      "authors": [3,1,2],
+      "issue": 2
+    }
   }
 ]

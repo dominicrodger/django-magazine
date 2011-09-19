@@ -1,4 +1,4 @@
 <em>By
 {% for author in authors %}
-    <a href="{{ author.get_absolute_url }}" title="View other articles by {{ author }}">{{ author }}</a>{% if not forloop.last %}, {% endif %}
+    {% include 'magazine/_individual_author.html' %}{% if not forloop.last %}, {% endif %}
 {% endfor %}.</em>
