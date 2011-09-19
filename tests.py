@@ -115,7 +115,7 @@ class ArticleTestCase(TestCase):
 
         for article in articles:
             self.assertNumQueries(0, lambda: getattr(article, 'issue'))
-            self.assertNumQueries(0, lambda: getattr(article, 'author'))
+            self.assertNumQueries(0, lambda: getattr(article, 'authors'))
 
 class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
@@ -167,10 +167,10 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(list(response.context['articles']), [self.article_1, self.article_2])
-        self.assertContains(response, self.article_1.author.__unicode__())
-        self.assertContains(response, self.article_2.author.__unicode__())
-        self.assertContains(response, self.article_1.author.get_absolute_url())
-        self.assertContains(response, self.article_2.author.get_absolute_url())
+        self.assertContains(response, self.article_1.authors.all()[0].__unicode__())
+        self.assertContains(response, self.article_2.authors.all()[0].__unicode__())
+        self.assertContains(response, self.article_1.authors.all()[0].get_absolute_url())
+        self.assertContains(response, self.article_2.authors.all()[0].get_absolute_url())
 
         # Check that changing the order of the articles in an issue affects the
         # order they are rendered.
@@ -272,9 +272,10 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.context['article'], self.article_2)
         self.assertContains(response, self.article_2.text)
         # Check that the author details show up (if they exist)
-        self.assertContains(response, self.article_2.author)
-        self.assertContains(response, self.article_2.author.details)
-        self.assertContains(response, self.article_2.author.get_absolute_url())
+        for author in self.article_2.authors.all():
+            self.assertContains(response, author)
+            self.assertContains(response, author.details)
+            self.assertContains(response, author.get_absolute_url())
 
     def testAuthorDetailView(self):
         response = self.client.get(reverse('magazine_author_detail', args=[1,]))

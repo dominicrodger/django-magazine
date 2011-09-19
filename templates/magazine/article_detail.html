@@ -4,7 +4,9 @@
 <p><a href="{{ issue.get_absolute_url }}" title="Back to {{ issue }}" class="issue_back_button">&laquo; Back to {{ issue }}</a></p>
 <h1>{{ article.title }}</h1>
 
-<p class="magazine_author_tag"><em>By <a href="{{ article.author.get_absolute_url }}" title="View other articles by {{ article.author }}">{{ article.author }}</a></em></p>
+<p class="magazine_author_tag">
+    {% include 'magazine/_authors.html' with authors=article.authors.all %}
+</p>
 
 {% if not article.issue.embargoed %}
 {{ article.text|safe }}
@@ -13,11 +15,14 @@
 <p class="magazine_article_teaser">{{ article.teaser }}</p>
 {% endif %}
 
-{% if article.author.details %}
-<div class="about_the_author">
-<h2><a href="{{ article.author.get_absolute_url }}" title="View other articles by {{ article.author }}">{{ article.author }}</a></h2>
-{{ article.author.details|linebreaks }}
-</div>
-{% endif %}
+{% for author in article.authors.all %}
+    {% if author.details %}
+        <div class="about_the_author">
+        <h2><a href="{{ author.get_absolute_url }}" title="View other articles by {{ author }}">{{ author }}</a></h2>
+        {{ author.details|linebreaks }}
+        </div>
+    {% endif %}
+{% endfor %}
+
 
 {% endblock %}

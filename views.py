@@ -98,7 +98,7 @@ class AuthorDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
         author = self.get_object()
-        qs = Article.objects.filter(author = author)
+        qs = author.article_set.all()
 
         if not self.request.user.is_staff:
             qs = qs.filter(issue__published = True, issue__issue_date__lte = date.today())
