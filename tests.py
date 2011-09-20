@@ -26,22 +26,22 @@ class AuthorTestCase(TestCase):
 
     def testAuthorTemplate(self):
         result = (render_to_string('magazine/_authors.html', {'authors': []}))
-        self.assertEqual(result, '')
+        self.assertEqual(result.strip(), '')
 
         result = (render_to_string('magazine/_authors.html', {'authors': [self.paul,]}))
-        self.assertEqual(striptags(result), 'Paul Beasley-Murray')
+        self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertEqual(result.find(self.dom.get_absolute_url()), -1)
         self.assertEqual(result.find(self.bugs.get_absolute_url()), -1)
 
         result = render_to_string('magazine/_authors.html', {'authors': [self.paul,self.dom]})
-        self.assertEqual(striptags(result), 'Paul Beasley-Murray and Dominic Rodger')
+        self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray and Dominic Rodger')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
         self.assertEqual(result.find(self.bugs.get_absolute_url()), -1)
 
         result = render_to_string('magazine/_authors.html', {'authors': [self.paul, self.dom, self.bugs]})
-        self.assertEqual(striptags(result), 'Paul Beasley-Murray, Dominic Rodger and Bugs Bunny')
+        self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray, Dominic Rodger and Bugs Bunny')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.bugs.get_absolute_url()), -1)
