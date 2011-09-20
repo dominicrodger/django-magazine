@@ -141,7 +141,6 @@ class ArticleTestCase(TestCase):
 
         for article in articles:
             self.assertNumQueries(0, lambda: getattr(article, 'issue'))
-            self.assertNumQueries(0, lambda: getattr(article, 'authors'))
 
 class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]

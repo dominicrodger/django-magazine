@@ -99,7 +99,7 @@ class Issue(models.Model):
 
 class ArticleManager(models.Manager):
     def get_query_set(self):
-        return super(ArticleManager, self).get_query_set().select_related(u'issue', u'author',)
+        return super(ArticleManager, self).get_query_set().select_related(u'issue',)
 
 class Article(models.Model):
     title = models.CharField(max_length = 250)
