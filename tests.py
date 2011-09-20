@@ -126,13 +126,11 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.article_3 = Article.objects.get(pk = 3)
         self.article_4 = Article.objects.get(pk = 4)
         self.article_5 = Article.objects.get(pk = 5)
-        self.article_6 = Article.objects.get(pk = 6)
         self.issue_1 = Issue.objects.get(pk = 1)
         self.issue_2 = Issue.objects.get(pk = 2)
         self.issue_3 = Issue.objects.get(pk = 3)
         self.author_1 = Author.objects.get(pk = 1)
         self.author_2 = Author.objects.get(pk = 2)
-        self.author_3 = Author.objects.get(pk = 3)
 
         if not hasattr(self, 'staff_user'):
             self.staff_user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
@@ -145,13 +143,12 @@ class MagazineGeneralViewsTestCase(TestCase):
     def testIndexView(self):
         response = self.client.get(reverse('magazine_index'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['current_articles']), [self.article_3, self.article_5, self.article_6])
+        self.assertEqual(list(response.context['current_articles']), [self.article_3, self.article_5])
         self.assertEqual(response.context['current_issue'], self.issue_2)
         self.assertNotContains(response, self.article_1.teaser())
         self.assertNotContains(response, self.article_2.teaser())
         self.assertContains(response, self.article_3.teaser())
         self.assertContains(response, self.article_5.teaser())
-        self.assertContains(response, self.article_6.teaser())
 
         self.issue_2.published = False
         self.issue_2.save()
@@ -213,7 +210,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('magazine_issue_detail', args=[3]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_2)
-        self.assertEqual(list(response.context['articles']), [self.article_3, self.article_5, self.article_6])
+        self.assertEqual(list(response.context['articles']), [self.article_3, self.article_5])
 
         response = self.client.get(reverse('magazine_issue_detail', args=[4]))
         self.assertEqual(response.status_code, 404)
@@ -286,21 +283,19 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('magazine_author_detail', args=[1,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['author'], self.author_1)
-        self.assertEqual(list(response.context['articles']), [self.article_1,self.article_5,self.article_6])
+        self.assertEqual(list(response.context['articles']), [self.article_1,self.article_5])
         self.assertContains(response, u'Paul Beasley-Murray')
         self.assertContains(response, self.article_1.get_absolute_url())
         self.assertContains(response, self.article_5.get_absolute_url())
-        self.assertContains(response, self.article_6.get_absolute_url())
 
         response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['author'], self.author_2)
-        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5, self.article_6])
+        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5])
         self.assertContains(response, u'Dominic Rodger')
         self.assertNotContains(response, self.article_1.get_absolute_url())
         self.assertContains(response, self.article_2.get_absolute_url())
         self.assertContains(response, self.article_3.get_absolute_url())
-        self.assertContains(response, self.article_6.get_absolute_url())
 
         response = self.client.get(reverse('magazine_author_detail', args=[4,]))
         self.assertEqual(response.status_code, 404)
@@ -310,7 +305,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.client.login(username='ringo', password='ringopassword')
         response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5, self.article_6])
+        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5])
         self.client.logout()
 
         # Check that you can see articles from unpublished issues if you're
@@ -318,7 +313,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.client.login(username='john', password='johnpassword')
         response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5, self.article_6, self.article_4])
+        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5, self.article_4])
         self.client.logout()
 
     def testIssueListView(self):

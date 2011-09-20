@@ -15,13 +15,5 @@
       "surname": "Rodger",
       "details": "The developer of django-magazine."
     }
-  },
-  {
-    "pk": 3,
-    "model": "magazine.author",
-    "fields": {
-      "forename": "Bugs",
-      "surname": "Bunny"
-    }
   }
 ]
