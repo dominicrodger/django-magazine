@@ -92,17 +92,18 @@ class IssueTestCase(TestCase):
 
         start_of_month = date.today().replace(day = 1)
 
-        issue = Issue.objects.create(number = 4, issue_date = start_of_month - timedelta(days = 20))
-        issue_4 = Issue.objects.get(pk = issue.pk)
-        self.assertTrue(issue_4.embargoed())
+        if int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)) > 0:
+            issue = Issue.objects.create(number = 4, issue_date = start_of_month - timedelta(days = 20))
+            issue_4 = Issue.objects.get(pk = issue.pk)
+            self.assertTrue(issue_4.embargoed())
 
-        issue_4.issue_date = subtract_n_months(start_of_month, int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)) - 1)
-        issue_4.save()
-        self.assertTrue(issue_4.embargoed())
+            issue_4.issue_date = subtract_n_months(start_of_month, int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)) - 1)
+            issue_4.save()
+            self.assertTrue(issue_4.embargoed())
 
-        issue_4.issue_date = subtract_n_months(start_of_month, int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)))
-        issue_4.save()
-        self.assertFalse(issue_4.embargoed())
+            issue_4.issue_date = subtract_n_months(start_of_month, int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)))
+            issue_4.save()
+            self.assertFalse(issue_4.embargoed())
 
 class ArticleTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
