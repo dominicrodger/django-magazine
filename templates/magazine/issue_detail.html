@@ -11,7 +11,7 @@
 {% for article in articles %}
     <h2><a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title }}</a></h2>
     <p>{{ article.teaser }}</p>
-    <p>{% include 'magazine/_authors.html' with authors=article.authors.all %}</p>
+    <p>By {% include 'magazine/_authors.html' with authors=article.authors.all %}.</p>
 {% empty %}
     <p>There are no articles in this issue.</p>
 {% endfor %}
