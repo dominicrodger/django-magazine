@@ -1,4 +1,1 @@
-<em>By
-{% for author in authors %}
-    {% include 'magazine/_individual_author.html' %}{% if not forloop.last %}, {% endif %}
-{% endfor %}.</em>
+{% load magazine_tags %}{% magazine_authors authors %}

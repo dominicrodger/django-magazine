@@ -2,6 +2,8 @@ from datetime import date, timedelta
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import striptags
+from django.template.loader import render_to_string
 from django.test import TestCase
 from django.test.client import Client
 from magazine.models import Author, Issue, Article, subtract_n_months
@@ -12,6 +14,7 @@ class AuthorTestCase(TestCase):
     def setUp(self):
         self.paul = Author.objects.get(pk = 1)
         self.dom  = Author.objects.get(pk = 2)
+        self.bugs = Author.objects.get(pk = 3)
 
     def testUnicode(self):
         self.assertEqual(self.paul.__unicode__(), u'Paul Beasley-Murray')
@@ -20,6 +23,28 @@ class AuthorTestCase(TestCase):
     def testGetURL(self):
         self.assertEqual(self.paul.get_absolute_url(), reverse('magazine_author_detail', args=[self.paul.pk,]))
         self.assertEqual(self.dom.get_absolute_url(), reverse('magazine_author_detail', args=[self.dom.pk,]))
+
+    def testAuthorTemplate(self):
+        result = (render_to_string('magazine/_authors.html', {'authors': []}))
+        self.assertEqual(result, '')
+
+        result = (render_to_string('magazine/_authors.html', {'authors': [self.paul,]}))
+        self.assertEqual(striptags(result), 'Paul Beasley-Murray')
+        self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
+        self.assertEqual(result.find(self.dom.get_absolute_url()), -1)
+        self.assertEqual(result.find(self.bugs.get_absolute_url()), -1)
+
+        result = render_to_string('magazine/_authors.html', {'authors': [self.paul,self.dom]})
+        self.assertEqual(striptags(result), 'Paul Beasley-Murray and Dominic Rodger')
+        self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
+        self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
+        self.assertEqual(result.find(self.bugs.get_absolute_url()), -1)
+
+        result = render_to_string('magazine/_authors.html', {'authors': [self.paul, self.dom, self.bugs]})
+        self.assertEqual(striptags(result), 'Paul Beasley-Murray, Dominic Rodger and Bugs Bunny')
+        self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
+        self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
+        self.assertNotEqual(result.find(self.bugs.get_absolute_url()), -1)
 
 class IssueTestCase(TestCase):
     fixtures = ['test_issues.json',]
