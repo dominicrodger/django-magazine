@@ -20,8 +20,7 @@
     "pk": 3,
     "model": "magazine.author",
     "fields": {
-      "forename": "Bugs",
-      "surname": "Bunny"
+      "forename": "Bugs"
     }
   }
 ]

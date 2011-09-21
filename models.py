@@ -11,11 +11,14 @@ EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS'
 
 class Author(models.Model):
     forename = models.CharField(max_length = 100, help_text = u'The author\'s forename')
-    surname = models.CharField(max_length = 100, help_text = u'The author\'s surname')
+    surname = models.CharField(blank = True, null = True, max_length = 100, help_text = u'The author\'s surname')
     details = models.TextField(blank = True, null = True, help_text = u'Details about the author')
 
     def __unicode__(self):
-        return u'{0} {1}'.format(self.forename, self.surname)
+        if self.surname:
+            return u'{0} {1}'.format(self.forename, self.surname)
+
+        return self.forename
 
     def get_absolute_url(self):
         return reverse('magazine_author_detail', args=[self.pk,])

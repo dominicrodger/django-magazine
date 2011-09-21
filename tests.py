@@ -41,7 +41,7 @@ class AuthorTestCase(TestCase):
         self.assertEqual(result.find(self.bugs.get_absolute_url()), -1)
 
         result = render_to_string('magazine/_authors.html', {'authors': [self.paul, self.dom, self.bugs]})
-        self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray, Dominic Rodger and Bugs Bunny')
+        self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray, Dominic Rodger and Bugs')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.bugs.get_absolute_url()), -1)
