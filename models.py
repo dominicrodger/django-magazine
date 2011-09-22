@@ -23,6 +23,9 @@ class Author(models.Model):
     def get_absolute_url(self):
         return reverse('magazine_author_detail', args=[self.pk,])
 
+    def num_articles(self):
+        return self.article_set.count()
+
     class Meta:
         ordering = ('surname', 'forename',)
 

@@ -112,6 +112,9 @@ class ArticleTestCase(TestCase):
         self.article_1 = Article.objects.get(pk = 1)
         self.article_2 = Article.objects.get(pk = 2)
         self.article_3 = Article.objects.get(pk = 3)
+        self.author_1 = Author.objects.get(pk = 1)
+        self.author_2 = Author.objects.get(pk = 2)
+        self.author_3 = Author.objects.get(pk = 3)
 
     def testUnicode(self):
         self.assertEqual(self.article_1.__unicode__(), u'My first article')
@@ -141,6 +144,11 @@ class ArticleTestCase(TestCase):
 
         for article in articles:
             self.assertNumQueries(0, lambda: getattr(article, 'issue'))
+
+    def testNumArticles(self):
+        self.assertEqual(self.author_1.num_articles(), 2)
+        self.assertEqual(self.author_2.num_articles(), 4)
+        self.assertEqual(self.author_3.num_articles(), 0)
 
 class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
