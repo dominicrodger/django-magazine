@@ -150,6 +150,16 @@ class ArticleTestCase(TestCase):
         self.assertEqual(self.author_2.num_articles(), 4)
         self.assertEqual(self.author_3.num_articles(), 0)
 
+    def testNumAuthors(self):
+        articles = Article.objects_with_num_authors.all()
+
+        expected_num_authors = [1, 1, 1, 2, 1]
+
+        for article in articles:
+            self.assertNumQueries(0, lambda: getattr(article, 'num_authors'))
+
+        self.assertEqual(expected_num_authors, [a.num_authors for a in articles])
+
 class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
 

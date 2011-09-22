@@ -3,7 +3,7 @@ from datetime import date
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import F
+from django.db.models import F, Count
 from django.utils.text import truncate_words
 from django.template.defaultfilters import striptags
 
@@ -107,6 +107,10 @@ class ArticleManager(models.Manager):
     def get_query_set(self):
         return super(ArticleManager, self).get_query_set().select_related(u'issue',)
 
+class ArticleManagerWithNumAuthors(ArticleManager):
+    def get_query_set(self):
+        return super(ArticleManagerWithNumAuthors, self).get_query_set().annotate(num_authors = Count('authors'))
+
 class Article(models.Model):
     title = models.CharField(max_length = 250)
     subheading = models.CharField(max_length = 250, blank = True, null = True)
@@ -118,6 +122,7 @@ class Article(models.Model):
     order_in_issue = models.PositiveIntegerField(default = 0)
 
     objects = ArticleManager()
+    objects_with_num_authors = ArticleManagerWithNumAuthors()
 
     def __unicode__(self):
         return self.title
