@@ -5,7 +5,7 @@
 <h1>{{ article.title }}</h1>
 
 <p class="magazine_author_tag">
-    By {% include 'magazine/_authors.html' with authors=article.authors.all %}.
+    By {% spaceless %}{% include 'magazine/_authors.html' with authors=article.authors.all %}{% endspaceless %}.
 </p>
 
 {% if not article.issue.embargoed %}
