@@ -1,4 +1,5 @@
 import calendar
+import re
 from datetime import date
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -68,7 +69,6 @@ def subtract_n_months(date_val, num_months):
         return date(year, month, date_val.day)
     except ValueError:
         return date(year, month, __days_in_month(year, month))
-
 class Issue(models.Model):
     number = models.PositiveIntegerField(help_text = u'The issue number.', unique = True)
     issue_date = models.DateField(help_text = u'The selected day is ignored - please use the first of the month')
@@ -126,6 +126,11 @@ class ArticleManagerWithNumAuthors(ArticleManager):
     def get_query_set(self):
         return super(ArticleManagerWithNumAuthors, self).get_query_set().annotate(num_authors = Count('authors'))
 
+heading_pattern = re.compile('<(/?)h(\d)>')
+
+def increment_heading_tag(match):
+    return '<{0}h{1}>'.format(match.group(1), int(match.group(2)) + 1)
+
 class Article(models.Model):
     title = models.CharField(max_length = 250)
     subheading = models.CharField(max_length = 250, blank = True, null = True)
@@ -153,6 +158,9 @@ class Article(models.Model):
             return truncate_words(striptags(self.text), 50)
 
         return u'None available.'
+
+    def demoted_text(self):
+        return heading_pattern.sub(increment_heading_tag, self.text)
 
     def get_absolute_url(self):
         return reverse('magazine_article_detail', args=[self.issue.number,self.pk,])

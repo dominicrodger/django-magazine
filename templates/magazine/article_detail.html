@@ -9,7 +9,7 @@
 </p>
 
 {% if not article.issue.embargoed %}
-{{ article.text|safe }}
+{{ article.demoted_text|safe }}
 {% else %}
 {% include 'magazine/_article_embargoed.html' %}
 <p class="magazine_article_teaser">{{ article.teaser }}</p>

@@ -327,6 +327,14 @@ class MagazineGeneralViewsTestCase(TestCase):
             self.assertContains(response, author.details)
             self.assertContains(response, author.get_absolute_url())
 
+        # Check that headings are demoted (h1 -> h2, h2 -> h3 etc)
+        response = self.client.get(reverse('magazine_article_detail', args=[3, 5]))
+        self.assertContains(response, '<h2>Heading 1</h2>')
+        self.assertContains(response, '<h3>Heading 2</h3>')
+        self.assertContains(response, '<h4>Heading 3</h4>')
+        self.assertContains(response, '<h5>Heading 4</h5>')
+        self.assertContains(response, '<h6>Heading 5</h6>')
+
     def testAuthorDetailView(self):
         response = self.client.get(reverse('magazine_author_detail', args=[1,]))
         self.assertEqual(response.status_code, 200)
