@@ -16,7 +16,7 @@
 {% endif %}
 
 {% for author in article.authors.all %}
-    {% if author.details %}
+    {% if author.indexable and author.details %}
         <div class="about_the_author">
         <h2><a href="{{ author.get_absolute_url }}" title="View other articles by {{ author }}">{{ author }}</a></h2>
         {{ author.details|linebreaks }}

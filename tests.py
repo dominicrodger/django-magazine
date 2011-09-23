@@ -32,19 +32,20 @@ class AuthorTestCase(TestCase):
         self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertEqual(result.find(self.dom.get_absolute_url()), -1)
-        self.assertEqual(result.find(self.bugs.get_absolute_url()), -1)
+        self.assertEqual(result.find(reverse('magazine_author_detail', args=[self.bugs.pk,])), -1)
 
         result = render_to_string('magazine/_authors.html', {'authors': [self.paul,self.dom]})
         self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray and Dominic Rodger')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
-        self.assertEqual(result.find(self.bugs.get_absolute_url()), -1)
+        self.assertEqual(result.find(reverse('magazine_author_detail', args=[self.bugs.pk,])), -1)
 
         result = render_to_string('magazine/_authors.html', {'authors': [self.paul, self.dom, self.bugs]})
         self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray, Dominic Rodger and Bugs')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
-        self.assertNotEqual(result.find(self.bugs.get_absolute_url()), -1)
+        # Bugs is not indexable, and so should have a link to his profile
+        self.assertEqual(result.find(reverse('magazine_author_detail', args=[self.bugs.pk,])), -1)
 
 class IssueTestCase(TestCase):
     fixtures = ['test_issues.json',]
@@ -343,6 +344,10 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertNotContains(response, self.article_1.get_absolute_url())
         self.assertContains(response, self.article_2.get_absolute_url())
         self.assertContains(response, self.article_3.get_absolute_url())
+
+        # Bugs Bunny is not indexable
+        response = self.client.get(reverse('magazine_author_detail', args=[3,]))
+        self.assertEqual(response.status_code, 404)
 
         response = self.client.get(reverse('magazine_author_detail', args=[4,]))
         self.assertEqual(response.status_code, 404)

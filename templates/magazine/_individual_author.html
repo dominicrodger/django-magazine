@@ -1,1 +1,1 @@
-<a href="{{ author.get_absolute_url }}" title="View other articles by {{ author }}">{{ author }}</a>
+{% if author.indexable %}<a href="{{ author.get_absolute_url }}" title="View other articles by {{ author }}">{{ author }}</a>{% else %}{{ author }}{% endif %}

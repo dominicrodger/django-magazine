@@ -20,7 +20,8 @@
     "pk": 3,
     "model": "magazine.author",
     "fields": {
-      "forename": "Bugs"
+      "forename": "Bugs",
+      "indexable": "False"
     }
   }
 ]

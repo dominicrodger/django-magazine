@@ -107,7 +107,7 @@ class AuthorDetailView(DetailView):
         return context
 
     def get_queryset(self):
-        return Author.objects.all()
+        return Author.objects.filter(indexable = True)
 
     def get_object(self, queryset = None):
         if not queryset:

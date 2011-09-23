@@ -17,6 +17,7 @@ class Author(models.Model):
     forename = models.CharField(max_length = 100, help_text = u'The author\'s forename')
     surname = models.CharField(blank = True, null = True, max_length = 100, help_text = u'The author\'s surname')
     details = models.TextField(blank = True, null = True, help_text = u'Details about the author')
+    indexable = models.BooleanField(default = True, help_text = u'Select this for authors who shouldn\'t have their own page (e.g. "Anonymous")')
 
     objects = AuthorManager()
 
@@ -27,6 +28,9 @@ class Author(models.Model):
         return self.forename
 
     def get_absolute_url(self):
+        if not self.indexable:
+            # This is going to be a problem, but there's not really a lot we can do here.
+            pass
         return reverse('magazine_author_detail', args=[self.pk,])
 
     def get_num_articles(self):

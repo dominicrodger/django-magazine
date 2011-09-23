@@ -8,8 +8,19 @@ except ImportError:
     HAS_TINYMCE = False
 
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('forename', 'surname', 'get_num_articles')
+    list_display = ('forename', 'surname', 'get_num_articles', 'indexable',)
     search_fields = ('forename', 'surname',)
+    list_filter = ('indexable',)
+    actions = ['make_nonindexable', 'make_indexable',]
+
+    def make_nonindexable(modeladmin, request, queryset):
+        queryset.update(indexable=False)
+    make_nonindexable.short_description = "Mark selected authors as non-indexable"
+
+    def make_indexable(modeladmin, request, queryset):
+        queryset.update(indexable=True)
+    make_indexable.short_description = "Mark selected authors as indexable"
+
 admin.site.register(Author, AuthorAdmin)
 
 class ArticleAdmin(admin.ModelAdmin):
