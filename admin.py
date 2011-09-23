@@ -8,7 +8,7 @@ except ImportError:
     HAS_TINYMCE = False
 
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('forename', 'surname', 'get_num_articles', 'indexable',)
+    list_display = ('surname_forename', 'get_num_articles', 'indexable',)
     search_fields = ('forename', 'surname',)
     list_filter = ('indexable',)
     actions = ['make_nonindexable', 'make_indexable',]

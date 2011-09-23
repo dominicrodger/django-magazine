@@ -28,6 +28,13 @@ class Author(models.Model):
 
         return self.forename
 
+    def surname_forename(self):
+        if self.surname:
+            return u'{0}, {1}'.format(self.surname, self.forename)
+        return self.forename
+    surname_forename.short_description = u'Name'
+    surname_forename.admin_order_field = 'surname'
+
     def get_absolute_url(self):
         if not self.indexable:
             # This is going to be a problem, but there's not really a lot we can do here.
