@@ -117,3 +117,10 @@ class AuthorDetailView(DetailView):
             return queryset.get(pk = int(self.kwargs['pk']))
         except Author.DoesNotExist:
             raise Http404
+
+class AuthorListView(ListView):
+    template_name = 'magazine/authors.html'
+    context_object_name = 'authors'
+
+    def get_queryset(self):
+        return Author.objects.order_by('-num_articles',).filter(num_articles__gt = 0, indexable = True)

@@ -1,0 +1,10 @@
+{% extends 'magazine/magazine_base.html' %}
+
+{% block contents %}
+<h1>All Authors</h1>
+
+{% for author in authors %}
+    <h2><a href="{{ author.get_absolute_url }}" title="View {{ author }}">{{ author    }}<span class="magazine_list_publish_date"> - {{ author.num_articles }} article{{ author.num_articles|pluralize }}</span></a></h2>
+{% endfor %}
+
+{% endblock %}
