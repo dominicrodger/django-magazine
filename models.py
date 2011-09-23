@@ -9,10 +9,16 @@ from django.template.defaultfilters import striptags
 
 EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
 
+class AuthorManager(models.Manager):
+    def get_query_set(self):
+        return super(AuthorManager, self).get_query_set().annotate(num_articles = Count('article'))
+
 class Author(models.Model):
     forename = models.CharField(max_length = 100, help_text = u'The author\'s forename')
     surname = models.CharField(blank = True, null = True, max_length = 100, help_text = u'The author\'s surname')
     details = models.TextField(blank = True, null = True, help_text = u'Details about the author')
+
+    objects = AuthorManager()
 
     def __unicode__(self):
         if self.surname:
@@ -23,8 +29,13 @@ class Author(models.Model):
     def get_absolute_url(self):
         return reverse('magazine_author_detail', args=[self.pk,])
 
-    def num_articles(self):
-        return self.article_set.count()
+    def get_num_articles(self):
+        if not hasattr(self, 'num_articles'):
+            self.num_articles = self.article_set.count()
+
+        return self.num_articles
+    get_num_articles.short_description = u'Articles'
+    get_num_articles.admin_order_field = 'num_articles'
 
     class Meta:
         ordering = ('surname', 'forename',)

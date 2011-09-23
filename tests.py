@@ -146,9 +146,13 @@ class ArticleTestCase(TestCase):
             self.assertNumQueries(0, lambda: getattr(article, 'issue'))
 
     def testNumArticles(self):
-        self.assertEqual(self.author_1.num_articles(), 2)
-        self.assertEqual(self.author_2.num_articles(), 4)
-        self.assertEqual(self.author_3.num_articles(), 0)
+        self.assertNumQueries(0, lambda: getattr(self.author_1, 'num_articles'))
+        self.assertNumQueries(0, lambda: getattr(self.author_2, 'num_articles'))
+        self.assertNumQueries(0, lambda: getattr(self.author_3, 'num_articles'))
+
+        self.assertEqual(self.author_1.num_articles, 2)
+        self.assertEqual(self.author_2.num_articles, 4)
+        self.assertEqual(self.author_3.num_articles, 0)
 
     def testNumAuthors(self):
         articles = Article.objects_with_num_authors.all()

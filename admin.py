@@ -8,7 +8,7 @@ except ImportError:
     HAS_TINYMCE = False
 
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('forename', 'surname',)
+    list_display = ('forename', 'surname', 'get_num_articles')
     search_fields = ('forename', 'surname',)
 admin.site.register(Author, AuthorAdmin)
 
