@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import F, Count
 from django.utils.text import truncate_words
 from django.template.defaultfilters import striptags
+from magazine.utils import clean_word_text
 
 EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
 
@@ -144,6 +145,7 @@ class Article(models.Model):
     authors = models.ManyToManyField(Author)
     description = models.TextField(blank = True, null = True, help_text = u'Introductory paragraph, if any.')
     text = models.TextField(blank = True, null = True, help_text = u'Full text of the article.')
+    cleaned_text = models.TextField(blank = True, null = True, help_text = u'Auto-populated from the main body text, and cleaned up.')
     hits = models.IntegerField(default = 0)
     issue = models.ForeignKey(Issue)
     order_in_issue = models.PositiveIntegerField(default = 0)
@@ -157,17 +159,21 @@ class Article(models.Model):
     def mark_visited(self):
         Article.objects.filter(pk = self.pk).update(hits=F('hits') + 1)
 
+    def save(self, *args, **kwargs):
+        self.cleaned_text = clean_word_text(self.text)
+        return super(Article, self).save(*args, **kwargs)
+
     def teaser(self):
         if self.description:
             return self.description
 
-        if self.text:
-            return truncate_words(striptags(self.text), 50)
+        if self.cleaned_text:
+            return truncate_words(striptags(self.cleaned_text), 50)
 
         return u'None available.'
 
     def demoted_text(self):
-        return heading_pattern.sub(increment_heading_tag, self.text)
+        return heading_pattern.sub(increment_heading_tag, self.cleaned_text)
 
     def get_absolute_url(self):
         return reverse('magazine_article_detail', args=[self.issue.number,self.pk,])

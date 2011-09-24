@@ -28,6 +28,7 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ('title', 'subheading', 'description', 'text',)
     readonly_fields = ('hits',)
     filter_horizontal = ('authors',)
+    exclude = ('cleaned_text',)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if HAS_TINYMCE and db_field.name in ('text',):
