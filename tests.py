@@ -8,6 +8,14 @@ from django.test import TestCase
 from django.test.client import Client
 from magazine.models import Author, Issue, Article, subtract_n_months
 
+# Loading from fixtures doesn't call Article.save(), so the
+# cleaned_text won't be populated. We therefore need to force
+# it here.
+def initialise_article_text():
+    for article in Article.objects.all():
+        if article.text and not article.cleaned_text:
+            article.save()
+
 class AuthorTestCase(TestCase):
     fixtures = ['test_authors.json',]
 
@@ -110,6 +118,7 @@ class ArticleTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
 
     def setUp(self):
+        initialise_article_text()
         self.article_1 = Article.objects.get(pk = 1)
         self.article_2 = Article.objects.get(pk = 2)
         self.article_3 = Article.objects.get(pk = 3)
@@ -169,6 +178,8 @@ class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
 
     def setUp(self):
+        initialise_article_text()
+
         self.article_1 = Article.objects.get(pk = 1)
         self.article_2 = Article.objects.get(pk = 2)
         self.article_3 = Article.objects.get(pk = 3)

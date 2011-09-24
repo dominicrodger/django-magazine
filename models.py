@@ -160,7 +160,8 @@ class Article(models.Model):
         Article.objects.filter(pk = self.pk).update(hits=F('hits') + 1)
 
     def save(self, *args, **kwargs):
-        self.cleaned_text = clean_word_text(self.text)
+        if self.text:
+            self.cleaned_text = clean_word_text(self.text)
         return super(Article, self).save(*args, **kwargs)
 
     def teaser(self):
