@@ -1,7 +1,7 @@
 import bleach
 from lxml.html.clean import Cleaner
 
-allowed_tags = bleach.ALLOWED_TAGS + ['p', 'h1', 'h2',]
+allowed_tags = bleach.ALLOWED_TAGS + ['p', 'h1', 'h2', 'h3', 'h4', 'h5',]
 allowed_attributes = bleach.ALLOWED_ATTRIBUTES.copy()
 allowed_attributes['a'] = bleach.ALLOWED_ATTRIBUTES['a'] + ['name']
 
