@@ -1,5 +1,7 @@
 from django import template
+from django.template.defaultfilters import stringfilter
 from django.template.loader import render_to_string
+from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 
 register = template.Library()
@@ -18,3 +20,16 @@ def magazine_authors(authors):
         second_bit = ' and ' + render_to_string('magazine/_individual_author.html', {'author': authors[-1]})
         result = first_bit + second_bit
     return mark_safe(result)
+
+@register.filter
+@stringfilter
+def ampersands(value, autoescape=None):
+    if autoescape:
+        esc = conditional_escape
+    else:
+        esc = lambda x: x
+
+    value = esc(value)
+
+    return mark_safe(value.replace(' and ', ' <span class="ampersand">&amp;</span> '))
+ampersands.needs_autoescape = True

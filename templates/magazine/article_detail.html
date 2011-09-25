@@ -1,8 +1,10 @@
 {% extends 'magazine/magazine_base.html' %}
 
+{% load magazine_tags %}
+
 {% block contents %}
 <p><a href="{{ issue.get_absolute_url }}" title="Back to {{ issue }}" class="issue_back_button">&laquo; Back to {{ issue }}</a></p>
-<h1>{{ article.title }}</h1>
+<h1>{{ article.title|ampersands }}</h1>
 
 <p class="magazine_author_tag">
     By {% spaceless %}{% include 'magazine/_authors.html' with authors=article.authors.all %}{% endspaceless %}.

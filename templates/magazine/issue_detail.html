@@ -1,5 +1,7 @@
 {% extends 'magazine/magazine_base.html' %}
 
+{% load magazine_tags %}
+
 {% block contents %}
 
 <h1>{{ issue }} ({{ issue.month_year }})</h1>
@@ -9,7 +11,7 @@
 {% endif %}
 
 {% for article in articles %}
-    <h2><a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title }}</a></h2>
+    <h2><a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title|ampersands }}</a></h2>
     <p>{{ article.teaser }}</p>
     <p>By {% spaceless %}{% include 'magazine/_authors.html' with authors=article.authors.all %}{% endspaceless %}.</p>
 {% empty %}
