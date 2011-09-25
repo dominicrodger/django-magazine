@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
-from magazine.models import Article, Issue, Author
+from magazine.models import Article, Issue, Author, BookReview
 
 class CurrentIssueListView(ListView):
     template_name = 'magazine/current_issue.html'
@@ -11,7 +11,10 @@ class CurrentIssueListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListView, self).get_context_data(**kwargs)
-        context['current_issue'] = Issue.current_issue()
+        issue = Issue.current_issue()
+        context['current_issue'] = issue
+        context['book_reviews'] = BookReview.objects.filter(issue = issue)
+
         return context
 
     def get_queryset(self):
@@ -40,6 +43,8 @@ class IssueView(DetailView):
         context = super(DetailView, self).get_context_data(**kwargs)
         issue = self.get_object()
         context['articles'] = Article.objects.filter(issue = issue)
+        context['book_reviews'] = BookReview.objects.filter(issue = issue)
+
         return context
 
     def get_queryset(self):
@@ -103,7 +108,12 @@ class AuthorDetailView(DetailView):
         if not self.request.user.is_staff:
             qs = qs.filter(issue__published = True, issue__issue_date__lte = date.today())
 
-        context['articles'] = qs
+        qs_reviews = author.bookreview_set.all()
+        if not self.request.user.is_staff:
+            qs_reviews = qs_reviews.filter(issue__published = True, issue__issue_date__lte = date.today())
+
+        context['articles'] = list(qs) + list(qs_reviews)
+
         return context
 
     def get_queryset(self):
@@ -124,3 +134,18 @@ class AuthorListView(ListView):
 
     def get_queryset(self):
         return Author.objects.order_by('-num_articles',).filter(num_articles__gt = 0, indexable = True)
+
+class BookReviewView(ArticleView):
+    template_name = 'magazine/bookreview_detail.html'
+    context_object_name = 'bookreview'
+
+    def get_queryset(self):
+        try:
+            issue = Issue.objects.get(number = self.get_issue_number())
+
+            if not issue.is_published() and not self.request.user.is_staff:
+                return BookReview.objects.none()
+
+            return BookReview.objects.filter(issue = issue)
+        except Issue.DoesNotExist:
+            return BookReview.objects.none()

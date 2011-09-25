@@ -186,3 +186,48 @@ class Article(models.Model):
 
     class Meta:
         ordering = ('-issue', 'order_in_issue',)
+
+class BookReview(models.Model):
+    title = models.CharField(max_length = 250)
+    authors = models.ManyToManyField(Author)
+    text = models.TextField(blank = True, null = True, help_text = u'Full text of the review.')
+    cleaned_text = models.TextField(blank = True, null = True, help_text = u'Auto-populated from the main body text, and cleaned up.')
+    issue = models.ForeignKey(Issue)
+    order_in_issue = models.PositiveIntegerField(default = 0)
+    book_author = models.CharField(blank = True, null = True, max_length = 60)
+    publisher = models.CharField(blank = True, null = True, max_length = 60)
+    publisher_location = models.CharField(blank = True, null = True, max_length = 60)
+    publication_date = models.CharField(max_length = 20, blank = True, null = True)
+    num_pages = models.PositiveIntegerField(blank = True, null = True)
+    price = models.CharField(blank = True, null = True, max_length = 250)
+    isbn = models.CharField(blank = True, null = True, max_length = 20)
+    hits = models.IntegerField(default = 0)
+
+    def __unicode__(self):
+        if self.book_author:
+            return u'{0} ({1})'.format(self.title, self.book_author)
+
+        return self.title
+
+    def mark_visited(self):
+        BookReview.objects.filter(pk = self.pk).update(hits=F('hits') + 1)
+
+    def save(self, *args, **kwargs):
+        if self.text:
+            self.cleaned_text = clean_word_text(self.text)
+        return super(BookReview, self).save(*args, **kwargs)
+
+    def teaser(self):
+        if self.cleaned_text:
+            return truncate_words(striptags(self.cleaned_text), 50)
+
+        return u'None available.'
+
+    def demoted_text(self):
+        return heading_pattern.sub(increment_heading_tag, self.cleaned_text)
+
+    def get_absolute_url(self):
+        return reverse('magazine_bookreview_detail', args=[self.issue.number,self.pk,])
+
+    class Meta:
+        ordering = ('-issue', 'order_in_issue',)

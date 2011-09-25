@@ -1,0 +1,12 @@
+<ul class="book_reviews">
+{% for review in book_reviews %}
+    <li>
+        <a href="{{ review.get_absolute_url }}" title="Read a review of '{{ review }}'">{{ review.title }}</a>
+        {% if review.book_author %}
+            (by {{ review.book_author }})
+        {% endif %}
+        <br />
+        <span class="magazine_review_authors">Reviewed by {% spaceless %}{% include 'magazine/_authors.html' with authors=review.authors.all %}{% endspaceless %}</span>
+    </li>
+{% endfor %}
+</ul>

@@ -1,0 +1,34 @@
+<table class="magazine_bookreview_details">
+    {% if bookreview.book_author %}
+    <tr>
+        <th>Author:</th>
+        <td>{{ bookreview.book_author }}</td>
+    </tr>
+    {% endif %}
+    {% if bookreview.publisher %}
+    <tr>
+        <th>Published By:</th>
+        <td>{{ bookreview.publisher }}
+            {% if bookreview.publisher_location %}({{ bookreview.publisher_location }}){% endif %}
+        </td>
+    </tr>
+    {% endif %}
+    {% if bookreview.num_pages %}
+    <tr>
+        <th>Pages:</th>
+        <td>{{ bookreview.num_pages }}</td>
+    </tr>
+    {% endif %}
+    {% if bookreview.price %}
+    <tr>
+        <th>Price:</th>
+        <td>{{ bookreview.price }}</td>
+    </tr>
+    {% endif %}
+    {% if bookreview.isbn %}
+    <tr>
+        <th><acronym title="International Standard Book Number">ISBN</acronym>:</th>
+        <td>{{ bookreview.isbn }}</td>
+    </tr>
+    {% endif %}
+</table>

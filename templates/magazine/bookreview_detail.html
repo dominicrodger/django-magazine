@@ -1,0 +1,29 @@
+{% extends 'magazine/magazine_base.html' %}
+
+{% load magazine_tags %}
+
+{% block contents %}
+<p><a href="{{ issue.get_absolute_url }}" title="Back to {{ issue }}" class="issue_back_button">&laquo; Back to {{ issue }}</a></p>
+<h1>{{ bookreview.title|ampersands }}</h1>
+
+{% include 'magazine/_book_details.html' with bookreview=bookreview %}
+
+<p class="magazine_author_tag">
+    Reviewed by {% spaceless %}{% include 'magazine/_authors.html' with authors=bookreview.authors.all %}{% endspaceless %}.
+</p>
+
+{% if bookreview.issue.embargoed %}
+    {% if user.is_staff %}
+    {% include 'magazine/_article_embargoed_staff.html' %}
+    {{ bookreview.demoted_text|safe }}
+    {% else %}
+    {% include 'magazine/_article_embargoed.html' %}
+    <p class="magazine_article_teaser">{{ bookreview.teaser }}</p>
+    {% endif %}
+{% else %}
+    {{ bookreview.demoted_text|safe }}
+{% endif %}
+
+{% include 'magazine/_about_the_authors.html' with authors=bookreview.authors.all %}
+
+{% endblock %}

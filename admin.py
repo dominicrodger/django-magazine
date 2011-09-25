@@ -1,5 +1,5 @@
 from django.contrib import admin
-from magazine.models import Author, Article, Issue
+from magazine.models import Author, Article, Issue, BookReview
 
 try:
     from tinymce.widgets import TinyMCE
@@ -43,3 +43,20 @@ class IssueAdmin(admin.ModelAdmin):
     list_display = ('number', 'month_year', 'published',)
     list_filter = ('published',)
 admin.site.register(Issue, IssueAdmin)
+
+class BookReviewAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'title', 'hits', 'issue', 'book_author',)
+    list_editable = ('book_author',)
+    search_fields = ('title', 'book_author')
+    readonly_fields = ('hits',)
+    filter_horizontal = ('authors',)
+    exclude = ('cleaned_text',)
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if HAS_TINYMCE and db_field.name in ('text',):
+            return db_field.formfield(widget=TinyMCE(
+                attrs={'cols': 80, 'rows': 30},
+            ))
+        return super(BookReviewAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+
+admin.site.register(BookReview, BookReviewAdmin)
