@@ -53,10 +53,6 @@ class Author(models.Model):
     class Meta:
         ordering = ('surname', 'forename',)
 
-class PublishedIssueManager(models.Manager):
-    def get_query_set(self):
-        return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte = date.today(), published = True)
-
 def __days_in_month(year, month):
     d = date(year, month, 1)
 
@@ -77,12 +73,21 @@ def subtract_n_months(date_val, num_months):
         return date(year, month, date_val.day)
     except ValueError:
         return date(year, month, __days_in_month(year, month))
+
+class PublishedIssueManager(models.Manager):
+    def get_query_set(self):
+        return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte = date.today(), published = True)
+
+class IssueManager(models.Manager):
+    def get_query_set(self):
+        return super(IssueManager, self).get_query_set().annotate(num_articles = Count('article'))
+
 class Issue(models.Model):
     number = models.PositiveIntegerField(help_text = u'The issue number.', unique = True)
     issue_date = models.DateField(help_text = u'The selected day is ignored - please use the first of the month')
     published = models.BooleanField(default = True, help_text = u'Uncheck to create an issue which is not yet published.')
     published_objects = PublishedIssueManager()
-    objects = models.Manager()
+    objects = IssueManager()
 
     def __unicode__(self):
         return u'Issue {0}'.format(self.number)
