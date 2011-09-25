@@ -31,5 +31,10 @@ def ampersands(value, autoescape=None):
 
     value = esc(value)
 
-    return mark_safe(value.replace(' and ', ' <span class="ampersand">&amp;</span> '))
+    pretty_ampersand = u' <span class="ampersand">&amp;</span> '
+
+    value = value.replace(' and ', pretty_ampersand)
+    value = value.replace(' &amp; ', pretty_ampersand)
+
+    return mark_safe(value)
 ampersands.needs_autoescape = True
