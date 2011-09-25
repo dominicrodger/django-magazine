@@ -45,9 +45,8 @@ class IssueAdmin(admin.ModelAdmin):
 admin.site.register(Issue, IssueAdmin)
 
 class BookReviewAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'title', 'hits', 'issue', 'book_author',)
-    list_editable = ('book_author',)
-    search_fields = ('title', 'book_author')
+    list_display = ('title', 'hits', 'issue', 'book_author',)
+    search_fields = ('title', 'book_author', 'text',)
     readonly_fields = ('hits',)
     filter_horizontal = ('authors',)
     exclude = ('cleaned_text',)
