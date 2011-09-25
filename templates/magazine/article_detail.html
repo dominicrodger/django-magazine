@@ -8,11 +8,16 @@
     By {% spaceless %}{% include 'magazine/_authors.html' with authors=article.authors.all %}{% endspaceless %}.
 </p>
 
-{% if not article.issue.embargoed %}
-{{ article.demoted_text|safe }}
+{% if article.issue.embargoed %}
+    {% if user.is_staff %}
+    {% include 'magazine/_article_embargoed_staff.html' %}
+    {{ article.demoted_text|safe }}
+    {% else %}
+    {% include 'magazine/_article_embargoed.html' %}
+    <p class="magazine_article_teaser">{{ article.teaser }}</p>
+    {% endif %}
 {% else %}
-{% include 'magazine/_article_embargoed.html' %}
-<p class="magazine_article_teaser">{{ article.teaser }}</p>
+    {{ article.demoted_text|safe }}
 {% endif %}
 
 {% include 'magazine/_about_the_authors.html' with authors=article.authors.all %}
