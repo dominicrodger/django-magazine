@@ -76,7 +76,7 @@ def subtract_n_months(date_val, num_months):
 
 class PublishedIssueManager(models.Manager):
     def get_query_set(self):
-        return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte = date.today(), published = True)
+        return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte = date.today(), published = True).annotate(num_articles = Count('article'))
 
 class IssueManager(models.Manager):
     def get_query_set(self):
