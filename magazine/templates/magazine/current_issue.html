@@ -1,3 +1,7 @@
-{% with issue=current_issue articles=current_articles %}
-{% include 'magazine/issue_detail.html' %}
-{% endwith %}
+{% if current_issue %}
+    {% with issue=current_issue articles=current_articles %}
+    {% include 'magazine/issue_detail.html' %}
+    {% endwith %}
+{% else %}
+    {% include 'magazine/no_issues.html' %}
+{% endif %}

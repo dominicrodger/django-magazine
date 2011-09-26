@@ -1,0 +1,9 @@
+{% extends 'magazine/magazine_base.html' %}
+
+{% load url from future %}
+
+{% block contents %}
+<h1>No Issues Found</h1>
+
+<p>Congratulations - you've installed django-magazine. You&rsquo;ll need to <a href="{% url 'admin:magazine_issue_add' %}">add an issue</a> to get started.</p>
+{% endblock %}
