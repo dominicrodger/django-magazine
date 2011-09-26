@@ -9,7 +9,7 @@ setup(
     author_email='internet@dominicrodger.com',
     url='http://github.com/dominicrodger/django-magazine',
     license='BSD',
-    packages=['django-magazine'],
+    packages=['magazine'],
     include_package_data=True,
     package_data={'': ['README.md']},
     zip_safe=False,
