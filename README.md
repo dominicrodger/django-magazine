@@ -10,7 +10,7 @@ so you'll need that to use it. Also, don't use it right now - it's not remotely
 finished.
 
 This app depends on [Bleach](https://github.com/jsocol/bleach), for cleaning up
-submitted HTML (particularly content pasted in from Microsoft Word.
+submitted HTML (particularly content pasted in from Microsoft Word).
 
 This app also depends on [lxml](http://lxml.de/), for additional HTML clean-up
 (Bleach gets me most the way there, but not quite all the way).
