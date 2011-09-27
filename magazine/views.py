@@ -108,11 +108,13 @@ class AuthorDetailView(DetailView):
         if not self.request.user.is_staff:
             qs = qs.filter(issue__published = True, issue__issue_date__lte = date.today())
 
+        context['articles'] = qs
+
         qs_reviews = author.bookreview_set.all()
         if not self.request.user.is_staff:
             qs_reviews = qs_reviews.filter(issue__published = True, issue__issue_date__lte = date.today())
 
-        context['articles'] = list(qs) + list(qs_reviews)
+        context['book_reviews'] = qs_reviews
 
         return context
 

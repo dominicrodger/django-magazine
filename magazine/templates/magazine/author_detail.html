@@ -12,4 +12,9 @@
     <p>{{ article.teaser }}</p>
 {% endfor %}
 
+{% if book_reviews %}
+<h2>Book Reviews</h2>
+{% include 'magazine/_book_review_list.html' with bookreviews=bookreviews %}
+{% endif %}
+
 {% endblock %}
