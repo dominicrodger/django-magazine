@@ -9,21 +9,24 @@ class CurrentIssueListView(ListView):
     template_name = 'magazine/current_issue.html'
     context_object_name = 'current_articles'
 
+    def get_current_issue(self):
+        if not hasattr(self, 'current_issue'):
+            self.current_issue = Issue.current_issue()
+
+        return self.current_issue
+
     def get_context_data(self, **kwargs):
         context = super(ListView, self).get_context_data(**kwargs)
-        issue = Issue.current_issue()
-        context['current_issue'] = issue
-        context['book_reviews'] = BookReview.objects.filter(issue = issue)
+        context['current_issue'] = self.get_current_issue()
+        context['book_reviews'] = BookReview.objects.filter(issue = self.get_current_issue())
 
         return context
 
     def get_queryset(self):
-        live_issue = Issue.current_issue()
-
-        if not live_issue:
+        if not self.get_current_issue():
             return Article.objects.none()
 
-        return Article.objects.filter(issue = live_issue)
+        return Article.objects.filter(issue = self.get_current_issue())
 
 class IssueListView(ListView):
     template_name = 'magazine/issues.html'
