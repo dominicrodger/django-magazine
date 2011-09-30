@@ -106,14 +106,14 @@ class AuthorDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
         author = self.get_object()
-        qs = author.article_set.all()
+        qs = author.article_set.order_by('issue')
 
         if not self.request.user.is_staff:
             qs = qs.filter(issue__published = True, issue__issue_date__lte = date.today())
 
         context['articles'] = qs
 
-        qs_reviews = author.bookreview_set.all()
+        qs_reviews = author.bookreview_set.order_by('issue')
         if not self.request.user.is_staff:
             qs_reviews = qs_reviews.filter(issue__published = True, issue__issue_date__lte = date.today())
 
