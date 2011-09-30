@@ -1,5 +1,7 @@
 {% extends 'magazine/magazine_base.html' %}
 
+{% load magazine_tags %}
+
 {% block contents %}
 <h1>{{ author }}</h1>
 
@@ -8,7 +10,10 @@
 {% endif %}
 
 {% for article in articles %}
-    <h2><a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title }}</a></h2>
+    <h2>
+        <a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title|ampersands }}</a>
+        <span class="magazine_issue_link">(<a href="{{ article.issue.get_absolute_url }}" title="View more articles from {{ article.issue }}">{{ article.issue }}</a>)</span>
+    </h2>
     <p>{{ article.teaser }}</p>
 {% endfor %}
 
