@@ -118,7 +118,8 @@ class AuthorDetailView(DetailView):
         if not self.request.user.is_staff:
             qs_reviews = qs_reviews.filter(issue__published = True, issue__issue_date__lte = date.today())
 
-        context['book_reviews'] = qs_reviews
+        context['num_book_reviews'] = qs_reviews.count()
+        context['book_reviews'] = qs_reviews[:10]
 
         return context
 
@@ -159,6 +160,25 @@ class AuthorArticlesView(ListView):
 
     def get_queryset(self):
         return self.get_author().article_set.filter(issue__published = True, issue__issue_date__lte = date.today()).order_by('issue')
+
+class AuthorBookReviewsView(ListView):
+    template_name = 'magazine/author_book_reviews.html'
+    context_object_name = 'book_reviews'
+    paginate_by = 10
+
+    def get_author(self):
+        if not hasattr(self, 'author'):
+            self.author = Author.objects.get(pk = int(self.kwargs['pk']), indexable = True)
+
+        return self.author
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorBookReviewsView, self).get_context_data(**kwargs)
+        context['author'] = self.get_author()
+        return context
+
+    def get_queryset(self):
+        return self.get_author().bookreview_set.filter(issue__published = True, issue__issue_date__lte = date.today()).order_by('issue')
 
 class BookReviewView(ArticleView):
     template_name = 'magazine/bookreview_detail.html'

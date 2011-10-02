@@ -24,7 +24,22 @@
 
 {% if book_reviews %}
 <h2>Book Reviews</h2>
-{% include 'magazine/_book_review_list.html' with bookreviews=bookreviews %}
+<ul class="book_reviews">
+{% for review in book_reviews %}
+    <li>
+        <a href="{{ review.get_absolute_url }}" title="Read a review of '{{ review }}'">{{ review.title }}</a>
+        {% if review.book_author %}
+            (by {{ review.book_author }})
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+{% if num_book_reviews != book_reviews|length %}
+<p><a href="{% url 'magazine_author_book_reviews' author.pk %}" title="View all {{ num_book_reviews }} book reviews by {{ author }}">View all {{ num_book_reviews }} book reviews by {{ author }}</a>.</p>
+{% endif %}
+
+
 {% endif %}
 
 {% endblock %}

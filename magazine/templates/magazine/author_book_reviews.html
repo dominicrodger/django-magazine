@@ -1,0 +1,30 @@
+{% extends 'magazine/magazine_base.html' %}
+
+{% block contents %}
+
+<h1>{{ author }}</h1>
+
+<p><a href="{{ author.get_absolute_url }}" title="Read more from {{ author }}">Read more from {{ author }}</a>.</p>
+
+{% if author.details %}
+    {{ author.details|linebreaks }}
+{% endif %}
+
+{% if not book_reviews %}
+    <p>{{ author }} has not contributed any book reviews yet.</p>
+{% endif %}
+
+<ul class="book_reviews">
+{% for review in book_reviews %}
+    <li>
+        <a href="{{ review.get_absolute_url }}" title="Read a review of '{{ review }}'">{{ review.title }}</a>
+        {% if review.book_author %}
+            (by {{ review.book_author }})
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+{% include 'magazine/_paginator.html' %}
+
+{% endblock %}
