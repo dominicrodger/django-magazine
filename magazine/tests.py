@@ -350,7 +350,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('magazine_author_detail', args=[1,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['author'], self.author_1)
-        self.assertEqual(list(response.context['articles']), [self.article_1,self.article_5])
+        self.assertEqual(list(response.context['articles']), [self.article_5,self.article_1])
         self.assertContains(response, u'Paul Beasley-Murray')
         self.assertContains(response, self.article_1.get_absolute_url())
         self.assertContains(response, self.article_5.get_absolute_url())
@@ -358,7 +358,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['author'], self.author_2)
-        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5])
+        self.assertEqual(list(response.context['articles']), [self.article_3, self.article_5, self.article_2])
         self.assertContains(response, u'Dominic Rodger')
         self.assertNotContains(response, self.article_1.get_absolute_url())
         self.assertContains(response, self.article_2.get_absolute_url())
@@ -376,7 +376,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.client.login(username='ringo', password='ringopassword')
         response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5])
+        self.assertEqual(list(response.context['articles']), [self.article_3, self.article_5, self.article_2])
         self.client.logout()
 
         # Check that you can see articles from unpublished issues if you're
@@ -384,7 +384,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.client.login(username='john', password='johnpassword')
         response = self.client.get(reverse('magazine_author_detail', args=[2,]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['articles']), [self.article_2, self.article_3, self.article_5, self.article_4])
+        self.assertEqual(list(response.context['articles']), [self.article_4, self.article_3, self.article_5, self.article_2])
         self.client.logout()
 
     def testIssueListView(self):
