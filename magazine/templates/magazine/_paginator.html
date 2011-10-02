@@ -1,0 +1,9 @@
+<div class="magazine_pagination">
+    {% for page in page_obj.paginator.page_range %}
+        {% if page != page_obj.number %}
+            <a href="?page={{ page }}" title="View page {{ page }}">{{ page }}</a>
+        {% else %}
+            {{ page }}
+        {% endif %}
+    {% endfor %}
+</div>

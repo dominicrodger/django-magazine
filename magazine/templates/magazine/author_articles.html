@@ -1,0 +1,27 @@
+{% extends 'magazine/magazine_base.html' %}
+
+{% block contents %}
+
+<h1>{{ author }}</h1>
+
+<p><a href="{{ author.get_absolute_url }}" title="Read more from {{ author }}">Read more from {{ author }}</a>.</p>
+
+{% if author.details %}
+    {{ author.details|linebreaks }}
+{% endif %}
+
+{% if not articles %}
+    <p>{{ author }} has not contributed any articles yet.</p>
+{% endif %}
+
+{% for article in articles %}
+    <h2>
+        <a href="{{ article.get_absolute_url }}" title="View Article">{{ article.title }}</a>
+        <span class="magazine_issue_link">(<a href="{{ article.issue.get_absolute_url }}" title="{{ article.issue }}">{{ article.issue.issue_date|date:"F Y" }}</a>)</span>
+    </h2>
+    <p>{{ article.teaser }}</p>
+{% endfor %}
+
+{% include 'magazine/_paginator.html' %}
+
+{% endblock %}

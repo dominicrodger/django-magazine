@@ -1,6 +1,7 @@
 {% extends 'magazine/magazine_base.html' %}
 
 {% load magazine_tags %}
+{% load url from future %}
 
 {% block contents %}
 <h1>{{ author }}</h1>
@@ -16,6 +17,10 @@
     </h2>
     <p>{{ article.teaser }}</p>
 {% endfor %}
+
+{% if num_articles != articles|length %}
+<p><a href="{% url 'magazine_author_articles' author.pk %}" title="View all {{ num_articles }} articles by {{ author }}">View all {{ num_articles }} articles by {{ author }}</a>.</p>
+{% endif %}
 
 {% if book_reviews %}
 <h2>Book Reviews</h2>
