@@ -1,11 +1,6 @@
 from django.contrib import admin
 from magazine.models import Author, Article, Issue, BookReview
-
-try:
-    from tinymce.widgets import TinyMCE
-    HAS_TINYMCE = True
-except ImportError:
-    HAS_TINYMCE = False
+from tinymce.widgets import TinyMCE
 
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('surname_forename', 'get_num_articles', 'indexable',)
@@ -31,7 +26,7 @@ class ArticleAdmin(admin.ModelAdmin):
     exclude = ('cleaned_text',)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
-        if HAS_TINYMCE and db_field.name in ('text',):
+        if db_field.name in ('text',):
             return db_field.formfield(widget=TinyMCE(
                 attrs={'cols': 80, 'rows': 30},
             ))
@@ -52,7 +47,7 @@ class BookReviewAdmin(admin.ModelAdmin):
     exclude = ('cleaned_text',)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
-        if HAS_TINYMCE and db_field.name in ('text',):
+        if db_field.name in ('text',):
             return db_field.formfield(widget=TinyMCE(
                 attrs={'cols': 80, 'rows': 30},
             ))
