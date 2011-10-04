@@ -138,6 +138,7 @@ class AuthorDetailView(DetailView):
 class AuthorListView(ListView):
     template_name = 'magazine/authors.html'
     context_object_name = 'authors'
+    paginate_by = 20
 
     def get_queryset(self):
         return Author.objects.order_by('-num_articles',).filter(num_articles__gt = 0, indexable = True)
