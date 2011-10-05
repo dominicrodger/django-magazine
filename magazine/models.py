@@ -187,6 +187,10 @@ class Article(models.Model):
     class Meta:
         ordering = ('-issue', 'order_in_issue',)
 
+class BookReviewManager(models.Manager):
+    def get_query_set(self):
+        return super(BookReviewManager, self).get_query_set().select_related(u'issue',)
+
 class BookReview(models.Model):
     title = models.CharField(max_length = 250)
     authors = models.ManyToManyField(Author)
@@ -202,6 +206,8 @@ class BookReview(models.Model):
     price = models.CharField(blank = True, null = True, max_length = 250)
     isbn = models.CharField(blank = True, null = True, max_length = 20)
     hits = models.IntegerField(default = 0)
+
+    objects = BookReviewManager()
 
     def __unicode__(self):
         if self.book_author:
