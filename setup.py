@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
 
+import magazine
+
 setup(
     name='django-magazine',
-    version='0.1.0',
+    version=magazine.__version__,
     description='A Django app for managing magazine articles, issues and authors.',
     long_description=open('README.md').read(),
     author='Dominic Rodger',
