@@ -16,7 +16,7 @@ class CurrentIssueListView(ListView):
         return self.current_issue
 
     def get_context_data(self, **kwargs):
-        context = super(ListView, self).get_context_data(**kwargs)
+        context = super(CurrentIssueListView, self).get_context_data(**kwargs)
         context['current_issue'] = self.get_current_issue()
         context['book_reviews'] = BookReview.objects.filter(issue = self.get_current_issue())
 
@@ -43,7 +43,7 @@ class IssueView(DetailView):
     context_object_name = 'issue'
 
     def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data(**kwargs)
+        context = super(IssueView, self).get_context_data(**kwargs)
         issue = self.get_object()
         context['articles'] = Article.objects.filter(issue = issue)
         context['book_reviews'] = BookReview.objects.filter(issue = issue)
@@ -73,7 +73,7 @@ class ArticleView(DetailView):
         return int(self.kwargs['number'])
 
     def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data(**kwargs)
+        context = super(ArticleView, self).get_context_data(**kwargs)
         context['issue'] = Issue.objects.get(number = self.get_issue_number())
         return context
 
@@ -104,7 +104,7 @@ class AuthorDetailView(DetailView):
     context_object_name = 'author'
 
     def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data(**kwargs)
+        context = super(AuthorDetailView, self).get_context_data(**kwargs)
         author = self.get_object()
         qs = author.article_set.order_by('issue')
 
