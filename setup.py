@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='django-magazine',
@@ -9,9 +9,6 @@ setup(
     author_email='internet@dominicrodger.com',
     url='http://github.com/dominicrodger/django-magazine',
     license='BSD',
-    packages=['magazine'],
+    packages=find_packages(),
     include_package_data=True,
-    package_data={'': ['README.md']},
-    zip_safe=False,
-    install_requires=['Django', 'South', 'bleach', 'django-tinymce', 'html5lib',]
 )
