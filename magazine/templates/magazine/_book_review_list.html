@@ -6,7 +6,7 @@
             (by {{ review.book_author }})
         {% endif %}
         <br />
-        <span class="magazine_review_authors">Reviewed by {% spaceless %}{% include 'magazine/_authors.html' with authors=review.authors.all %}{% endspaceless %}</span>
+        <span class="magazine_review_authors">Reviewed by {% spaceless %}{% include 'magazine/_authors.html' with object=review %}{% endspaceless %}</span>
     </li>
 {% endfor %}
 </ul>

@@ -1,4 +1,5 @@
 from django import template
+from django.core.cache import cache
 from django.template.defaultfilters import stringfilter
 from django.template.loader import render_to_string
 from django.utils.html import conditional_escape
@@ -6,8 +7,24 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+def __get_cached_authors_key(object):
+    return u'authors_{0}_{1}'.format(object.__class__.__name__, object.pk),
+
+def __get_cached_authors(object):
+    key = __get_cached_authors_key(object)
+
+    authors = cache.get(key)
+
+    if not authors:
+        authors = object.authors.all()
+        if authors:
+            cache.set(key, authors, 3600)
+
+    return authors
+
 @register.simple_tag
-def magazine_authors(authors):
+def magazine_authors(object):
+    authors = __get_cached_authors(object)
     if not authors:
         return ''
 

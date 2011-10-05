@@ -9,7 +9,7 @@
 {% include 'magazine/_book_details.html' with bookreview=bookreview %}
 
 <p class="magazine_author_tag">
-    Reviewed by {% spaceless %}{% include 'magazine/_authors.html' with authors=bookreview.authors.all %}{% endspaceless %}.
+    Reviewed by {% spaceless %}{% include 'magazine/_authors.html' with object=bookreview %}{% endspaceless %}.
 </p>
 
 {% if bookreview.issue.embargoed %}
