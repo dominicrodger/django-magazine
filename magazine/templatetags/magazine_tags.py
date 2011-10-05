@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 register = template.Library()
 
 def __get_cached_authors_key(object):
-    return u'authors_{0}_{1}'.format(object.__class__.__name__, object.pk),
+    return u'magazine_authors_{0}_{1}'.format(object.__class__.__name__, object.pk),
 
 def __get_cached_authors(object):
     key = __get_cached_authors_key(object)
