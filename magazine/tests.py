@@ -33,22 +33,31 @@ class AuthorTestCase(TestCase):
         self.assertEqual(self.dom.get_absolute_url(), reverse('magazine_author_detail', args=[self.dom.pk,]))
 
     def testAuthorTemplate(self):
-        result = (render_to_string('magazine/_authors.html', {'authors': []}))
+        class AuthorHolder(object):
+
+            def __init__(self, pk, authors):
+                self.pk = pk
+                self.authors = authors
+
+            def all_authors(self):
+                return self.authors
+
+        result = (render_to_string('magazine/_authors.html', {'object': AuthorHolder(1, [])}))
         self.assertEqual(result.strip(), '')
 
-        result = (render_to_string('magazine/_authors.html', {'authors': [self.paul,]}))
+        result = (render_to_string('magazine/_authors.html', {'object': AuthorHolder(2, [self.paul,])}))
         self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertEqual(result.find(self.dom.get_absolute_url()), -1)
         self.assertEqual(result.find(reverse('magazine_author_detail', args=[self.bugs.pk,])), -1)
 
-        result = render_to_string('magazine/_authors.html', {'authors': [self.paul,self.dom]})
+        result = render_to_string('magazine/_authors.html', {'object': AuthorHolder(3, [self.paul,self.dom])})
         self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray and Dominic Rodger')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
         self.assertEqual(result.find(reverse('magazine_author_detail', args=[self.bugs.pk,])), -1)
 
-        result = render_to_string('magazine/_authors.html', {'authors': [self.paul, self.dom, self.bugs]})
+        result = render_to_string('magazine/_authors.html', {'object': AuthorHolder(4, [self.paul, self.dom, self.bugs])})
         self.assertEqual(striptags(result).strip(), 'Paul Beasley-Murray, Dominic Rodger and Bugs')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)

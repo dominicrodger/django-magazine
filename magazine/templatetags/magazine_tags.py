@@ -16,7 +16,7 @@ def __get_cached_authors(object):
     authors = cache.get(key)
 
     if not authors:
-        authors = object.authors.all()
+        authors = object.all_authors()
         if authors:
             cache.set(key, authors, 3600)
 

@@ -164,6 +164,9 @@ class Article(models.Model):
     def mark_visited(self):
         Article.objects.filter(pk = self.pk).update(hits=F('hits') + 1)
 
+    def all_authors(self):
+        return self.authors.all()
+
     def save(self, *args, **kwargs):
         if self.text:
             self.cleaned_text = clean_word_text(self.text)
@@ -217,6 +220,9 @@ class BookReview(models.Model):
 
     def mark_visited(self):
         BookReview.objects.filter(pk = self.pk).update(hits=F('hits') + 1)
+
+    def all_authors(self):
+        return self.authors.all()
 
     def save(self, *args, **kwargs):
         if self.text:
