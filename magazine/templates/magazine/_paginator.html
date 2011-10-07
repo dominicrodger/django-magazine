@@ -1,9 +1,19 @@
-<div class="magazine_pagination">
-    {% for page in page_obj.paginator.page_range %}
-        {% if page != page_obj.number %}
-            <a href="?page={{ page }}" title="View page {{ page }}">{{ page }}</a>
-        {% else %}
-            {{ page }}
-        {% endif %}
-    {% endfor %}
-</div>
+<p class="pagination">
+{% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" title="View Previous Page" class="previous">&laquo; Previous</a>
+{% else %}
+    <span class="previous">&laquo; Previous</span>
+{% endif %}
+{% for page in page_obj.paginator.page_range %}
+    {% if page != page_obj.number %}
+        <a href="?page={{ page }}" title="View page {{ page }}" class="page">{{ page }}</a>
+    {% else %}
+        <span class="active">{{ page }}</span>
+    {% endif %}
+{% endfor %}
+{% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" title="View Next Page" class="next">Next &raquo;</a>
+{% else %}
+    <span class="next">Next &raquo;</span>
+{% endif %}
+</p>
