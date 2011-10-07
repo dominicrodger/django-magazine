@@ -143,6 +143,10 @@ class AuthorListView(ListView):
     def get_queryset(self):
         return Author.objects.order_by('-num_articles',).filter(num_articles__gt = 0, indexable = True)
 
+class AuthorListViewAlphabetised(AuthorListView):
+    def get_queryset(self):
+        return Author.objects.order_by('surname','forename').filter(num_articles__gt = 0, indexable = True)
+
 class AuthorArticlesView(ListView):
     template_name = 'magazine/author_articles.html'
     context_object_name = 'articles'
