@@ -7,4 +7,3 @@ def initialise_article_text():
     for article in Article.objects.all():
         if article.text and not article.cleaned_text:
             article.save()
-

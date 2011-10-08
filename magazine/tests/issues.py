@@ -62,4 +62,3 @@ class IssueTestCase(TestCase):
             issue_4.issue_date = subtract_n_months(start_of_month, int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2)))
             issue_4.save()
             self.assertFalse(issue_4.embargoed())
-
