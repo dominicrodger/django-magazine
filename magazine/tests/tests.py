@@ -5,14 +5,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
 from magazine.models import Author, Issue, Article, subtract_n_months
-
-# Loading from fixtures doesn't call Article.save(), so the
-# cleaned_text won't be populated. We therefore need to force
-# it here.
-def initialise_article_text():
-    for article in Article.objects.all():
-        if article.text and not article.cleaned_text:
-            article.save()
+from magazine.tests.test_utils import initialise_article_text
 
 class ArticleTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
