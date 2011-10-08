@@ -307,22 +307,3 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context['issues']), [self.issue_3, self.issue_2, self.issue_1])
         self.client.logout()
-
-class SubtractNMonthsTestCase(TestCase):
-
-    def testWithDateAtMiddleOfYear(self):
-        self.assertEqual(subtract_n_months(date(2010, 4, 7), 2), date(2010, 2, 7))
-
-    def testWithDateAtEndOfMonth(self):
-        # September only has 30 days
-        self.assertEqual(subtract_n_months(date(2010, 10, 31), 1), date(2010, 9, 30))
-
-    def testWithDateAtBeginningOfYear(self):
-        self.assertEqual(subtract_n_months(date(2010, 1, 31), 1), date(2009, 12, 31))
-
-    def testWithDateAtBeginningOfYearAtEndOfMonth(self):
-        self.assertEqual(subtract_n_months(date(2010, 3, 31), 4), date(2009, 11, 30))
-
-    def testWithMoreThan12Months(self):
-        self.assertEqual(subtract_n_months(date(2010, 3, 31), 25), date(2008, 2, 29))
-        self.assertEqual(subtract_n_months(date(2010, 3, 31), 37), date(2007, 2, 28))
