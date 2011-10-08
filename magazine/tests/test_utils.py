@@ -7,3 +7,15 @@ def initialise_article_text():
     for article in Article.objects.all():
         if article.text and not article.cleaned_text:
             article.save()
+
+class LoginGuard(object):
+    def __init__(self, client, username, password):
+        self.client = client
+        self.username = username
+        self.password = password
+
+    def __enter__(self):
+        self.client.login(username=self.username, password=self.password)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.client.logout()

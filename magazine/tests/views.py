@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
 from magazine.models import Author, Issue, Article
-from magazine.tests.test_utils import initialise_article_text
+from magazine.tests.test_utils import initialise_article_text, LoginGuard
 
 class MagazineGeneralViewsTestCase(TestCase):
     fixtures = ['test_issues.json', 'test_authors.json', 'test_articles.json',]
@@ -84,18 +84,16 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
         # ... still doesn't work if you login as a regular user
-        self.client.login(username='ringo', password='ringopassword')
-        response = self.client.get(reverse('magazine_issue_detail', args=[2]))
-        self.assertEqual(response.status_code, 404)
-        self.client.logout()
+        with LoginGuard(self.client, 'ringo', 'ringopassword'):
+            response = self.client.get(reverse('magazine_issue_detail', args=[2]))
+            self.assertEqual(response.status_code, 404)
 
         # ... but does you're logged in as a staff member
-        self.client.login(username='john', password='johnpassword')
-        response = self.client.get(reverse('magazine_issue_detail', args=[2]))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['issue'], self.issue_3)
-        self.assertEqual(list(response.context['articles']), [self.article_4,])
-        self.client.logout()
+        with LoginGuard(self.client, 'john', 'johnpassword'):
+            response = self.client.get(reverse('magazine_issue_detail', args=[2]))
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.context['issue'], self.issue_3)
+            self.assertEqual(list(response.context['articles']), [self.article_4,])
 
         response = self.client.get(reverse('magazine_issue_detail', args=[3]))
         self.assertEqual(response.status_code, 200)
@@ -146,16 +144,14 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
         # ... still doesn't work if you login as a regular user
-        self.client.login(username='ringo', password='ringopassword')
-        response = self.client.get(reverse('magazine_article_detail', args=[2, 4]))
-        self.assertEqual(response.status_code, 404)
-        self.client.logout()
+        with LoginGuard(self.client, 'ringo', 'ringopassword'):
+            response = self.client.get(reverse('magazine_article_detail', args=[2, 4]))
+            self.assertEqual(response.status_code, 404)
 
         # ... but does if you're logged in as a staff member
-        self.client.login(username='john', password='johnpassword')
-        response = self.client.get(reverse('magazine_article_detail', args=[2, 4]))
-        self.assertEqual(response.status_code, 200)
-        self.client.logout()
+        with LoginGuard(self.client, 'john', 'johnpassword'):
+            response = self.client.get(reverse('magazine_article_detail', args=[2, 4]))
+            self.assertEqual(response.status_code, 200)
 
         # Check that the full text is rendered
         response = self.client.get(reverse('magazine_article_detail', args=[1, 2]))
@@ -204,19 +200,17 @@ class MagazineGeneralViewsTestCase(TestCase):
 
         # Check that you can't see articles from unpublished issues if you're
         # logged in as a regular user
-        self.client.login(username='ringo', password='ringopassword')
-        response = self.client.get(reverse('magazine_author_detail', args=[2,]))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['articles']), [self.article_3, self.article_5, self.article_2])
-        self.client.logout()
+        with LoginGuard(self.client, 'ringo', 'ringopassword'):
+            response = self.client.get(reverse('magazine_author_detail', args=[2,]))
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(list(response.context['articles']), [self.article_3, self.article_5, self.article_2])
 
         # Check that you can see articles from unpublished issues if you're
         # logged in as a staff member
-        self.client.login(username='john', password='johnpassword')
-        response = self.client.get(reverse('magazine_author_detail', args=[2,]))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['articles']), [self.article_4, self.article_3, self.article_5, self.article_2])
-        self.client.logout()
+        with LoginGuard(self.client, 'john', 'johnpassword'):
+            response = self.client.get(reverse('magazine_author_detail', args=[2,]))
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(list(response.context['articles']), [self.article_4, self.article_3, self.article_5, self.article_2])
 
     def testIssueListView(self):
         response = self.client.get(reverse('magazine_issues'))
@@ -225,16 +219,14 @@ class MagazineGeneralViewsTestCase(TestCase):
 
         # Check that you can't see unpublished issues if you're logged in as a
         # regular user
-        self.client.login(username='ringo', password='ringopassword')
-        response = self.client.get(reverse('magazine_issues'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['issues']), [self.issue_2, self.issue_1])
-        self.client.logout()
+        with LoginGuard(self.client, 'ringo', 'ringopassword'):
+            response = self.client.get(reverse('magazine_issues'))
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(list(response.context['issues']), [self.issue_2, self.issue_1])
 
         # Check that you can see unpublished issues if you're logged in as a
         # staff member
-        self.client.login(username='john', password='johnpassword')
-        response = self.client.get(reverse('magazine_issues'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context['issues']), [self.issue_3, self.issue_2, self.issue_1])
-        self.client.logout()
+        with LoginGuard(self.client, 'john', 'johnpassword'):
+            response = self.client.get(reverse('magazine_issues'))
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(list(response.context['issues']), [self.issue_3, self.issue_2, self.issue_1])
