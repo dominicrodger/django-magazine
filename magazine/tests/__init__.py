@@ -1,0 +1,1 @@
+from magazine.tests.tests import *
