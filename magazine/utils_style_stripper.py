@@ -43,4 +43,3 @@ def strip_styles(text):
     serializer = HTMLSerializer(quote_attr_values=True,
                                 omit_optional_tags=False)
     return serializer.render(stream)
-    
