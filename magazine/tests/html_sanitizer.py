@@ -1,5 +1,5 @@
 from django.test import TestCase
-from magazine.utils import clean_word_text
+from magazine.utils.word_cleaner import clean_word_text
 
 class HTMLSanitizerTestCase(TestCase):
     def testStripAttributes(self):

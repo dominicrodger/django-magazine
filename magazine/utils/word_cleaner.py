@@ -1,5 +1,5 @@
 import bleach
-from utils_style_stripper import strip_styles
+from style_stripper import strip_styles
 
 allowed_tags = bleach.ALLOWED_TAGS + ['p', 'h1', 'h2', 'h3', 'h4', 'h5',]
 allowed_attributes = bleach.ALLOWED_ATTRIBUTES.copy()

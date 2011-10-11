@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import F, Count
 from django.utils.text import truncate_words
 from django.template.defaultfilters import striptags
-from magazine.utils import clean_word_text
+from magazine.utils.word_cleaner import clean_word_text
 
 EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
 
