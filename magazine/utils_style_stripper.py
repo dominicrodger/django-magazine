@@ -9,22 +9,22 @@ class StyleSanitizerMixin(HTMLSanitizerMixin):
         if not hasattr(self, 'in_style_tag'):
             self.in_style_tag = False
 
-        if token['type'] in (tokenTypes['StartTag'], tokenTypes['EndTag'],
-                             tokenTypes['EmptyTag']):
-            if token['name'] == 'style':
-                if token['type'] == tokenTypes['StartTag']:
+        # If we're in a style tag - mark our position as such, and
+        # discard the token.
+        if token.get('name') == 'style':
+            if token['type'] == tokenTypes['StartTag']:
+                if not token['selfClosing']:
                     self.in_style_tag = True
-                    return
-                if token['type'] == tokenTypes['EndTag']:
-                    self.in_style_tag = False
-                    return
+                return
+            if token['type'] == tokenTypes['EndTag']:
+                self.in_style_tag = False
+                return
 
         if self.in_style_tag:
             # We're in a style tag, so we want to discard this token
             return
 
         # We're not in a style tag, so we want to keep this token
-
         return token
 
 
@@ -40,6 +40,9 @@ def strip_styles(text):
     domtree = parser.parseFragment(text)
     walker = html5lib.treewalkers.getTreeWalker('simpletree')
     stream = walker(domtree)
-    serializer = HTMLSerializer(quote_attr_values=True,
-                                omit_optional_tags=False)
-    return serializer.render(stream)
+    try:
+        serializer = HTMLSerializer(quote_attr_values=True,
+                                    omit_optional_tags=False)
+        return serializer.render(stream)
+    except AssertionError, e:
+        return domtree.toxml()
