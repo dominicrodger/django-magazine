@@ -32,3 +32,7 @@ class HTMLSanitizerTestCase(TestCase):
         # for empty style tags
         html = u'<style type="text/css" somethingelse="something" /><p>hello!</p>'
         self.assertEqual(clean_word_text(html), u'<p>hello!</p>')
+
+    def testEmpty(self):
+        html = u''
+        self.assertEqual(clean_word_text(html, True), u'')
