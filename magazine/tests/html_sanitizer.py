@@ -12,7 +12,7 @@ class HTMLSanitizerTestCase(TestCase):
 
     def testStyleStripped(self):
         html = u'<style>foobar</style><p>hello!</p>'
-        self.assertEqual(clean_word_text(html, True), u'<p>hello!</p>')
+        self.assertEqual(clean_word_text(html), u'<p>hello!</p>')
 
         # Check we're not reliant on the <style> tag looking a
         # particular way
@@ -35,4 +35,4 @@ class HTMLSanitizerTestCase(TestCase):
 
     def testEmpty(self):
         html = u''
-        self.assertEqual(clean_word_text(html, True), u'')
+        self.assertEqual(clean_word_text(html), u'')
