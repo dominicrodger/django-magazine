@@ -86,8 +86,8 @@ class Issue(models.Model):
     number = models.PositiveIntegerField(help_text = u'The issue number.', unique = True)
     issue_date = models.DateField(help_text = u'The selected day is ignored - please use the first of the month')
     published = models.BooleanField(default = True, help_text = u'Uncheck to create an issue which is not yet published.')
-    published_objects = PublishedIssueManager()
     objects = IssueManager()
+    published_objects = PublishedIssueManager()
 
     def __unicode__(self):
         return u'Issue {0}'.format(self.number)
