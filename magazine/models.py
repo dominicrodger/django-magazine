@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import F, Count
 from django.utils.text import truncate_words
 from django.template.defaultfilters import striptags
+from sorl.thumbnail import ImageField
 from magazine.utils.word_cleaner import clean_word_text
 
 EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
@@ -154,6 +155,7 @@ class Article(models.Model):
     hits = models.IntegerField(default = 0)
     issue = models.ForeignKey(Issue)
     order_in_issue = models.PositiveIntegerField(default = 0)
+    image = ImageField(upload_to = 'magazine', blank = True, null = True)
 
     objects = ArticleManager()
     objects_with_num_authors = ArticleManagerWithNumAuthors()
