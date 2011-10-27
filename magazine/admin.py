@@ -1,6 +1,7 @@
 from django.contrib import admin
 from magazine.models import Author, Article, Issue, BookReview
 from tinymce.widgets import TinyMCE
+from sorl.thumbnail.admin import AdminImageMixin
 
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('surname_forename', 'get_num_articles', 'indexable',)
@@ -18,8 +19,8 @@ class AuthorAdmin(admin.ModelAdmin):
 
 admin.site.register(Author, AuthorAdmin)
 
-class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'hits', 'issue',)
+class ArticleAdmin(AdminImageMixin, admin.ModelAdmin):
+    list_display = ('title', 'admin_thumbnail', 'hits', 'issue',)
     search_fields = ('title', 'subheading', 'description', 'text',)
     readonly_fields = ('hits',)
     filter_horizontal = ('authors',)

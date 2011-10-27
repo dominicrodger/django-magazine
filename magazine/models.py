@@ -7,7 +7,7 @@ from django.db import models
 from django.db.models import F, Count
 from django.utils.text import truncate_words
 from django.template.defaultfilters import striptags
-from sorl.thumbnail import ImageField
+from sorl.thumbnail import ImageField, get_thumbnail
 from magazine.utils.word_cleaner import clean_word_text
 
 EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
@@ -168,6 +168,14 @@ class Article(models.Model):
 
     def all_authors(self):
         return self.authors.all()
+
+    def admin_thumbnail(self):
+        if not self.image:
+            return u'(None)'
+        im = get_thumbnail(self.image, '100x100', crop='center', quality=99)
+        return u'<img src="{0}" />'.format(im.url)
+    admin_thumbnail.short_description = 'Image'
+    admin_thumbnail.allow_tags = True
 
     def save(self, *args, **kwargs):
         if self.text:
