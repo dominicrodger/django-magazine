@@ -20,7 +20,7 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(Author, AuthorAdmin)
 
 class ArticleAdmin(AdminImageMixin, admin.ModelAdmin):
-    list_display = ('title', 'admin_thumbnail', 'hits', 'issue',)
+    list_display = ('title', 'admin_thumbnail', 'hits', 'issue', 'last_updated',)
     search_fields = ('title', 'subheading', 'description', 'text',)
     readonly_fields = ('hits',)
     filter_horizontal = ('authors',)
@@ -41,7 +41,7 @@ class IssueAdmin(admin.ModelAdmin):
 admin.site.register(Issue, IssueAdmin)
 
 class BookReviewAdmin(admin.ModelAdmin):
-    list_display = ('title', 'hits', 'issue', 'book_author',)
+    list_display = ('title', 'hits', 'issue', 'book_author', 'last_updated',)
     search_fields = ('title', 'book_author', 'text',)
     readonly_fields = ('hits',)
     filter_horizontal = ('authors',)

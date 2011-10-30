@@ -1,6 +1,6 @@
 import calendar
 import re
-from datetime import date
+from datetime import date, datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -156,6 +156,7 @@ class Article(models.Model):
     issue = models.ForeignKey(Issue)
     order_in_issue = models.PositiveIntegerField(default = 0)
     image = ImageField(upload_to = 'magazine', blank = True, null = True)
+    updated = models.DateTimeField(auto_now = True, default = datetime.now(), verbose_name = u'Last Updated')
 
     objects = ArticleManager()
     objects_with_num_authors = ArticleManagerWithNumAuthors()
@@ -219,6 +220,7 @@ class BookReview(models.Model):
     text = models.TextField(blank = True, null = True, help_text = u'Full text of the review.')
     cleaned_text = models.TextField(blank = True, null = True, help_text = u'Auto-populated from the main body text, and cleaned up.')
     hits = models.IntegerField(default = 0)
+    updated = models.DateTimeField(auto_now = True, default = datetime.now(), verbose_name = u'Last Updated')
 
     objects = BookReviewManager()
 
