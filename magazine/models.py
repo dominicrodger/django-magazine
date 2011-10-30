@@ -217,7 +217,7 @@ class BookReview(models.Model):
     publication_date = models.CharField(max_length = 20, blank = True, null = True)
     num_pages = models.PositiveIntegerField(blank = True, null = True)
     price = models.CharField(blank = True, null = True, max_length = 250)
-    isbn = models.CharField(blank = True, null = True, max_length = 20)
+    isbn = models.CharField(blank = True, null = True, max_length = 20, verbose_name = u'ISBN')
     hits = models.IntegerField(default = 0)
 
     objects = BookReviewManager()
