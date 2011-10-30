@@ -207,8 +207,6 @@ class BookReviewManager(models.Manager):
 class BookReview(models.Model):
     title = models.CharField(max_length = 250)
     authors = models.ManyToManyField(Author)
-    text = models.TextField(blank = True, null = True, help_text = u'Full text of the review.')
-    cleaned_text = models.TextField(blank = True, null = True, help_text = u'Auto-populated from the main body text, and cleaned up.')
     issue = models.ForeignKey(Issue)
     order_in_issue = models.PositiveIntegerField(default = 0)
     book_author = models.CharField(blank = True, null = True, max_length = 60)
@@ -218,6 +216,8 @@ class BookReview(models.Model):
     num_pages = models.PositiveIntegerField(blank = True, null = True)
     price = models.CharField(blank = True, null = True, max_length = 250)
     isbn = models.CharField(blank = True, null = True, max_length = 20, verbose_name = u'ISBN')
+    text = models.TextField(blank = True, null = True, help_text = u'Full text of the review.')
+    cleaned_text = models.TextField(blank = True, null = True, help_text = u'Auto-populated from the main body text, and cleaned up.')
     hits = models.IntegerField(default = 0)
 
     objects = BookReviewManager()
