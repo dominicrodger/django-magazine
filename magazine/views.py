@@ -1,6 +1,5 @@
 from datetime import date
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
 from magazine.models import Article, Issue, Author, BookReview
