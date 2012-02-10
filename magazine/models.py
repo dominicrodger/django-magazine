@@ -12,6 +12,13 @@ from magazine.utils.word_cleaner import clean_word_text
 
 EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
 
+def embargoed_by_date(issue):
+    today = date.today()
+
+    # Embargo this article if it's less than EMBARGO_TIME_IN_MONTHS
+    # months old.
+    return subtract_n_months(today, EMBARGO_TIME_IN_MONTHS) < issue.issue_date
+
 class AuthorManager(models.Manager):
     def get_query_set(self):
         return super(AuthorManager, self).get_query_set().annotate(num_articles = Count('article'))
@@ -109,13 +116,9 @@ class Issue(models.Model):
         if not self.is_published():
             return True
 
-        today = date.today()
+        f = getattr(settings, 'MAGAZINE_IS_EMBARGOED_FUNCTION', embargoed_by_date)
 
-        # Figure out if it's at least EMBARGO_TIME_IN_MONTHS old
-        if subtract_n_months(today, EMBARGO_TIME_IN_MONTHS) < self.issue_date:
-            return True
-
-        return False
+        return f(self)
 
     def get_absolute_url(self):
         return reverse('magazine_issue_detail', args=[self.number,])
