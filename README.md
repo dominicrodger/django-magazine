@@ -6,8 +6,7 @@ Magazines consist of Issues, each of which contains one or more Articles, which
 are by one or more Authors.
 
 This app uses [South](http://south.aeracode.org/) for managing database changes,
-so you'll need that to use it. Also, don't use it right now - it's not remotely
-finished.
+so you'll need that to use it.
 
 This app depends on [Bleach](https://github.com/jsocol/bleach), for cleaning up
 submitted HTML (particularly content pasted in from Microsoft Word).
