@@ -62,8 +62,6 @@ class Author(models.Model):
         ordering = ('surname', 'forename',)
 
 def __days_in_month(year, month):
-    d = date(year, month, 1)
-
     return calendar.monthrange(year, month)[1]
 
 def subtract_n_months(date_val, num_months):
