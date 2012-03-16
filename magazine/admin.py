@@ -25,6 +25,7 @@ class ArticleAdmin(AdminImageMixin, admin.ModelAdmin):
     readonly_fields = ('hits',)
     filter_horizontal = ('authors',)
     exclude = ('cleaned_text',)
+    ordering = ('issue',)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name in ('text',):
