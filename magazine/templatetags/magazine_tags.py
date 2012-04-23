@@ -7,8 +7,11 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+
 def __get_cached_authors_key(object):
-    return u'magazine_authors_{0}_{1}'.format(object.__class__.__name__, object.pk),
+    return u'magazine_authors_{0}_{1}'.format(object.__class__.__name__,
+                                              object.pk),
+
 
 def __get_cached_authors(object):
     key = __get_cached_authors_key(object)
@@ -22,6 +25,7 @@ def __get_cached_authors(object):
 
     return authors
 
+
 @register.simple_tag
 def magazine_authors(object):
     authors = __get_cached_authors(object)
@@ -31,12 +35,18 @@ def magazine_authors(object):
     authors = list(authors)
 
     if len(authors) == 1:
-        return render_to_string('magazine/_individual_author.html', {'author': authors[0]})
+        return render_to_string('magazine/_individual_author.html',
+                                {'author': authors[0]})
     else:
-        first_bit = ', '.join([ render_to_string('magazine/_individual_author.html', {'author': author}) for author in authors[0:-1]])
-        second_bit = ' and ' + render_to_string('magazine/_individual_author.html', {'author': authors[-1]})
+        first_bit = ', '.join(
+            [render_to_string('magazine/_individual_author.html',
+                              {'author': author}) for author in authors[0:-1]])
+        second_bit = ' and ' +
+        render_to_string('magazine/_individual_author.html',
+                         {'author': authors[-1]})
         result = first_bit + second_bit
     return mark_safe(result)
+
 
 @register.filter
 @stringfilter
