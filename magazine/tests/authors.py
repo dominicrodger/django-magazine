@@ -32,7 +32,6 @@ class AuthorTestCase(TestCase):
 
     def testAuthorTemplate(self):
         class AuthorHolder(object):
-
             def __init__(self, pk, authors):
                 self.pk = pk
                 self.authors = authors
