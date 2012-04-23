@@ -4,6 +4,7 @@ from django.views.generic.list import ListView
 from django.views.generic import DetailView
 from magazine.models import Article, Issue, Author, BookReview
 
+
 class CurrentIssueListView(ListView):
     template_name = 'magazine/current_issue.html'
     context_object_name = 'current_articles'
@@ -17,7 +18,8 @@ class CurrentIssueListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CurrentIssueListView, self).get_context_data(**kwargs)
         context['current_issue'] = self.get_current_issue()
-        context['book_reviews'] = BookReview.objects.filter(issue = self.get_current_issue())
+        context['book_reviews'] = BookReview.objects\
+            .filter(issue=self.get_current_issue())
 
         return context
 
@@ -25,7 +27,8 @@ class CurrentIssueListView(ListView):
         if not self.get_current_issue():
             return Article.objects.none()
 
-        return Article.objects.filter(issue = self.get_current_issue())
+        return Article.objects.filter(issue=self.get_current_issue())
+
 
 class IssueListView(ListView):
     template_name = 'magazine/issues.html'
@@ -37,6 +40,7 @@ class IssueListView(ListView):
 
         return Issue.published_objects.all()
 
+
 class IssueView(DetailView):
     template_name = 'magazine/issue_detail.html'
     context_object_name = 'issue'
@@ -44,8 +48,8 @@ class IssueView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(IssueView, self).get_context_data(**kwargs)
         issue = self.get_object()
-        context['articles'] = Article.objects.filter(issue = issue)
-        context['book_reviews'] = BookReview.objects.filter(issue = issue)
+        context['articles'] = Article.objects.filter(issue=issue)
+        context['book_reviews'] = BookReview.objects.filter(issue=issue)
 
         return context
 
@@ -55,14 +59,15 @@ class IssueView(DetailView):
 
         return Issue.published_objects.all()
 
-    def get_object(self, queryset = None):
+    def get_object(self, queryset=None):
         if not queryset:
             queryset = self.get_queryset()
 
         try:
-            return queryset.get(number = int(self.kwargs['number']))
+            return queryset.get(number=int(self.kwargs['number']))
         except Issue.DoesNotExist:
             raise Http404
+
 
 class ArticleView(DetailView):
     template_name = 'magazine/article_detail.html'
@@ -73,30 +78,31 @@ class ArticleView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ArticleView, self).get_context_data(**kwargs)
-        context['issue'] = Issue.objects.get(number = self.get_issue_number())
+        context['issue'] = Issue.objects.get(number=self.get_issue_number())
         return context
 
     def get_queryset(self):
         try:
-            issue = Issue.objects.get(number = self.get_issue_number())
+            issue = Issue.objects.get(number=self.get_issue_number())
 
             if not issue.is_published() and not self.request.user.is_staff:
                 return Article.objects.none()
 
-            return Article.objects.filter(issue = issue)
+            return Article.objects.filter(issue=issue)
         except Issue.DoesNotExist:
             return Article.objects.none()
 
-    def get_object(self, queryset = None):
+    def get_object(self, queryset=None):
         if not queryset:
             queryset = self.get_queryset()
 
         try:
-            obj = queryset.get(pk = int(self.kwargs['pk']))
+            obj = queryset.get(pk=int(self.kwargs['pk']))
             obj.mark_visited()
             return obj
         except Article.DoesNotExist:
             raise Http404
+
 
 class AuthorDetailView(DetailView):
     template_name = 'magazine/author_detail.html'
@@ -108,14 +114,16 @@ class AuthorDetailView(DetailView):
         qs = author.article_set.order_by('issue')
 
         if not self.request.user.is_staff:
-            qs = qs.filter(issue__published = True, issue__issue_date__lte = date.today())
+            qs = qs.filter(issue__published=True,
+                           issue__issue_date__lte=date.today())
 
         context['num_articles'] = qs.count()
         context['articles'] = qs[:4]
 
         qs_reviews = author.bookreview_set.order_by('issue')
         if not self.request.user.is_staff:
-            qs_reviews = qs_reviews.filter(issue__published = True, issue__issue_date__lte = date.today())
+            qs_reviews = qs_reviews.filter(issue__published=True,
+                                           issue__issue_date__lte=date.today())
 
         context['num_book_reviews'] = qs_reviews.count()
         context['book_reviews'] = qs_reviews[:10]
@@ -123,16 +131,17 @@ class AuthorDetailView(DetailView):
         return context
 
     def get_queryset(self):
-        return Author.objects.filter(indexable = True)
+        return Author.objects.filter(indexable=True)
 
-    def get_object(self, queryset = None):
+    def get_object(self, queryset=None):
         if not queryset:
             queryset = self.get_queryset()
 
         try:
-            return queryset.get(pk = int(self.kwargs['pk']))
+            return queryset.get(pk=int(self.kwargs['pk']))
         except Author.DoesNotExist:
             raise Http404
+
 
 class AuthorListView(ListView):
     template_name = 'magazine/authors.html'
@@ -140,11 +149,15 @@ class AuthorListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Author.objects.order_by('-num_articles',).filter(num_articles__gt = 0, indexable = True)
+        return Author.objects.order_by('-num_articles',)\
+            .filter(num_articles__gt=0, indexable=True)
+
 
 class AuthorListViewAlphabetised(AuthorListView):
     def get_queryset(self):
-        return Author.objects.order_by('surname','forename').filter(num_articles__gt = 0, indexable = True)
+        return Author.objects.order_by('surname', 'forename')\
+            .filter(num_articles__gt=0, indexable=True)
+
 
 class AuthorArticlesView(ListView):
     template_name = 'magazine/author_articles.html'
@@ -153,7 +166,8 @@ class AuthorArticlesView(ListView):
 
     def get_author(self):
         if not hasattr(self, 'author'):
-            self.author = Author.objects.get(pk = int(self.kwargs['pk']), indexable = True)
+            self.author = Author.objects.get(pk=int(self.kwargs['pk']),
+                                             indexable=True)
 
         return self.author
 
@@ -163,7 +177,10 @@ class AuthorArticlesView(ListView):
         return context
 
     def get_queryset(self):
-        return self.get_author().article_set.filter(issue__published = True, issue__issue_date__lte = date.today()).order_by('issue')
+        return self.get_author().article_set\
+            .filter(issue__published=True,
+                    issue__issue_date__lte=date.today()).order_by('issue')
+
 
 class AuthorBookReviewsView(ListView):
     template_name = 'magazine/author_book_reviews.html'
@@ -172,7 +189,8 @@ class AuthorBookReviewsView(ListView):
 
     def get_author(self):
         if not hasattr(self, 'author'):
-            self.author = Author.objects.get(pk = int(self.kwargs['pk']), indexable = True)
+            self.author = Author.objects.get(pk=int(self.kwargs['pk']),
+                                             indexable=True)
 
         return self.author
 
@@ -182,7 +200,10 @@ class AuthorBookReviewsView(ListView):
         return context
 
     def get_queryset(self):
-        return self.get_author().bookreview_set.filter(issue__published = True, issue__issue_date__lte = date.today()).order_by('issue')
+        return self.get_author().bookreview_set\
+            .filter(issue__published=True,
+                    issue__issue_date__lte=date.today()).order_by('issue')
+
 
 class BookReviewView(ArticleView):
     template_name = 'magazine/bookreview_detail.html'
@@ -190,11 +211,11 @@ class BookReviewView(ArticleView):
 
     def get_queryset(self):
         try:
-            issue = Issue.objects.get(number = self.get_issue_number())
+            issue = Issue.objects.get(number=self.get_issue_number())
 
             if not issue.is_published() and not self.request.user.is_staff:
                 return BookReview.objects.none()
 
-            return BookReview.objects.filter(issue = issue)
+            return BookReview.objects.filter(issue=issue)
         except Issue.DoesNotExist:
             return BookReview.objects.none()
