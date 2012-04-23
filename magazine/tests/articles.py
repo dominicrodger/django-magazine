@@ -74,6 +74,11 @@ class ArticleTestCase(TestCase):
         self.assertEqual(self.author_2.num_articles, 4)
         self.assertEqual(self.author_3.num_articles, 0)
 
+        local_author_1 = Author.plain_objects.get(pk=1)
+        self.assertNumQueries(1, local_author_1.get_num_articles)
+        self.assertNumQueries(0, local_author_1.get_num_articles)
+        self.assertEqual(local_author_1.num_articles, 2)
+
     def testNumAuthors(self):
         articles = Article.objects_with_num_authors.all()
 

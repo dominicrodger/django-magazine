@@ -42,6 +42,7 @@ class Author(models.Model):
                                         '(e.g. "Anonymous")')
 
     objects = AuthorManager()
+    plain_objects = models.Manager()
 
     def __unicode__(self):
         if self.surname:
