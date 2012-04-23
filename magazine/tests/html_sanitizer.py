@@ -1,6 +1,7 @@
 from django.test import TestCase
 from magazine.utils.word_cleaner import clean_word_text
 
+
 class HTMLSanitizerTestCase(TestCase):
     def testStripAttributes(self):
         html = u'<a href="foobar" name="hello" title="View foobar" onclick="malicious()">hello!</a>'
