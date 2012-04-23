@@ -25,14 +25,21 @@ def embargoed_by_date(issue):
 
 class AuthorManager(models.Manager):
     def get_query_set(self):
-        return super(AuthorManager, self).get_query_set().annotate(num_articles=Count('article'))
+        return super(AuthorManager, self).get_query_set()\
+            .annotate(num_articles=Count('article'))
 
 
 class Author(models.Model):
-    forename = models.CharField(max_length=100, help_text=u'The author\'s forename')
-    surname = models.CharField(blank=True, null=True, max_length=100, help_text=u'The author\'s surname')
-    details = models.TextField(blank=True, null=True, help_text=u'Details about the author')
-    indexable = models.BooleanField(default=True, help_text=u'Select this for authors who shouldn\'t have their own page (e.g. "Anonymous")')
+    forename = models.CharField(max_length=100,
+                                help_text=u'The author\'s forename')
+    surname = models.CharField(blank=True, null=True, max_length=100,
+                               help_text=u'The author\'s surname')
+    details = models.TextField(blank=True, null=True,
+                               help_text=u'Details about the author')
+    indexable = models.BooleanField(default=True,
+                                    help_text=u'Select this for authors who '\
+                                        'shouldn\'t have their own page '\
+                                        '(e.g. "Anonymous")')
 
     objects = AuthorManager()
 
@@ -91,18 +98,25 @@ def subtract_n_months(date_val, num_months):
 
 class PublishedIssueManager(models.Manager):
     def get_query_set(self):
-        return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte=date.today(), published=True).annotate(num_articles=Count('article'))
+        return super(PublishedIssueManager, self).get_query_set()\
+            .filter(issue_date__lte=date.today(), published=True)\
+            .annotate(num_articles=Count('article'))
 
 
 class IssueManager(models.Manager):
     def get_query_set(self):
-        return super(IssueManager, self).get_query_set().annotate(num_articles = Count('article'))
+        return super(IssueManager, self).get_query_set()\
+            .annotate(num_articles=Count('article'))
 
 
 class Issue(models.Model):
-    number = models.PositiveIntegerField(help_text=u'The issue number.', unique=True)
-    issue_date = models.DateField(help_text=u'The selected day is ignored - please use the first of the month')
-    published = models.BooleanField(default=True, help_text=u'Uncheck to create an issue which is not yet published.')
+    number = models.PositiveIntegerField(help_text=u'The issue number.',
+                                         unique=True)
+    issue_date = models.DateField(help_text=u'The selected day is ignored - '\
+                                      'please use the first of the month')
+    published = models.BooleanField(default=True,
+                                    help_text=u'Uncheck to create an issue '\
+                                        'which is not yet published.')
     objects = IssueManager()
     published_objects = PublishedIssueManager()
 
@@ -148,12 +162,14 @@ class Issue(models.Model):
 
 class ArticleManager(models.Manager):
     def get_query_set(self):
-        return super(ArticleManager, self).get_query_set().select_related(u'issue',)
+        return super(ArticleManager, self).get_query_set()\
+            .select_related(u'issue',)
 
 
 class ArticleManagerWithNumAuthors(ArticleManager):
     def get_query_set(self):
-        return super(ArticleManagerWithNumAuthors, self).get_query_set().annotate(num_authors = Count('authors'))
+        return super(ArticleManagerWithNumAuthors, self)\
+            .get_query_set().annotate(num_authors=Count('authors'))
 
 heading_pattern = re.compile('<(/?)h(\d)>')
 
@@ -166,14 +182,20 @@ class Article(models.Model):
     title = models.CharField(max_length=250)
     subheading = models.CharField(max_length=250, blank=True, null=True)
     authors = models.ManyToManyField(Author)
-    description = models.TextField(blank=True, null=True, help_text=u'Introductory paragraph, if any.')
-    text = models.TextField(blank=True, null=True, help_text=u'Full text of the article.')
-    cleaned_text = models.TextField(blank=True, null=True, help_text=u'Auto-populated from the main body text, and cleaned up.')
+    description = models.TextField(blank=True, null=True,
+                                   help_text=u'Introductory paragraph, if '\
+                                   'any.')
+    text = models.TextField(blank=True, null=True,
+                            help_text=u'Full text of the article.')
+    cleaned_text = models.TextField(blank=True, null=True,
+                                    help_text=u'Auto-populated from the main '\
+                                    'body text, and cleaned up.')
     hits = models.IntegerField(default=0)
     issue = models.ForeignKey(Issue)
     order_in_issue = models.PositiveIntegerField(default=0)
     image = ImageField(upload_to='magazine', blank=True, null=True)
-    updated = models.DateTimeField(auto_now=True, default=datetime.now(), verbose_name=u'Last Updated')
+    updated = models.DateTimeField(auto_now=True, default=datetime.now(),
+                                   verbose_name=u'Last Updated')
 
     objects = ArticleManager()
     objects_with_num_authors = ArticleManagerWithNumAuthors()
@@ -213,7 +235,8 @@ class Article(models.Model):
         return heading_pattern.sub(increment_heading_tag, self.cleaned_text)
 
     def get_absolute_url(self):
-        return reverse('magazine_article_detail', args=[self.issue.number, self.pk, ])
+        return reverse('magazine_article_detail',
+                       args=[self.issue.number, self.pk, ])
 
     class Meta:
         ordering = ('-issue', 'order_in_issue',)
@@ -221,7 +244,8 @@ class Article(models.Model):
 
 class BookReviewManager(models.Manager):
     def get_query_set(self):
-        return super(BookReviewManager, self).get_query_set().select_related(u'issue', )
+        return super(BookReviewManager, self).get_query_set()\
+            .select_related(u'issue', )
 
 
 class BookReview(models.Model):
@@ -235,11 +259,16 @@ class BookReview(models.Model):
     publication_date = models.CharField(max_length=20, blank=True, null=True)
     num_pages = models.PositiveIntegerField(blank=True, null=True)
     price = models.CharField(blank=True, null=True, max_length=250)
-    isbn = models.CharField(blank=True, null=True, max_length=20, verbose_name=u'ISBN')
-    text = models.TextField(blank=True, null=True, help_text=u'Full text of the review.')
-    cleaned_text = models.TextField(blank=True, null=True, help_text=u'Auto-populated from the main body text, and cleaned up.')
+    isbn = models.CharField(blank=True, null=True, max_length=20,
+                            verbose_name=u'ISBN')
+    text = models.TextField(blank=True, null=True,
+                            help_text=u'Full text of the review.')
+    cleaned_text = models.TextField(blank=True, null=True,
+                                    help_text=u'Auto-populated from the main '\
+                                        'body text, and cleaned up.')
     hits = models.IntegerField(default=0)
-    updated = models.DateTimeField(auto_now=True, default=datetime.now(), verbose_name=u'Last Updated')
+    updated = models.DateTimeField(auto_now=True, default=datetime.now(),
+                                   verbose_name=u'Last Updated')
 
     objects = BookReviewManager()
 
