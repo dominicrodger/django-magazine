@@ -10,7 +10,10 @@ from django.template.defaultfilters import striptags
 from sorl.thumbnail import ImageField, get_thumbnail
 from magazine.utils.word_cleaner import clean_word_text
 
-EMBARGO_TIME_IN_MONTHS = int(getattr(settings, 'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
+
+EMBARGO_TIME_IN_MONTHS = int(getattr(settings,
+                                     'MAGAZINE_EMBARGO_TIME_IN_MONTHS', 2))
+
 
 def embargoed_by_date(issue):
     today = date.today()
@@ -19,15 +22,17 @@ def embargoed_by_date(issue):
     # months old.
     return subtract_n_months(today, EMBARGO_TIME_IN_MONTHS) < issue.issue_date
 
+
 class AuthorManager(models.Manager):
     def get_query_set(self):
-        return super(AuthorManager, self).get_query_set().annotate(num_articles = Count('article'))
+        return super(AuthorManager, self).get_query_set().annotate(num_articles=Count('article'))
+
 
 class Author(models.Model):
-    forename = models.CharField(max_length = 100, help_text = u'The author\'s forename')
-    surname = models.CharField(blank = True, null = True, max_length = 100, help_text = u'The author\'s surname')
-    details = models.TextField(blank = True, null = True, help_text = u'Details about the author')
-    indexable = models.BooleanField(default = True, help_text = u'Select this for authors who shouldn\'t have their own page (e.g. "Anonymous")')
+    forename = models.CharField(max_length=100, help_text=u'The author\'s forename')
+    surname = models.CharField(blank=True, null=True, max_length=100, help_text=u'The author\'s surname')
+    details = models.TextField(blank=True, null=True, help_text=u'Details about the author')
+    indexable = models.BooleanField(default=True, help_text=u'Select this for authors who shouldn\'t have their own page (e.g. "Anonymous")')
 
     objects = AuthorManager()
 
@@ -46,9 +51,10 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         if not self.indexable:
-            # This is going to be a problem, but there's not really a lot we can do here.
+            # This is going to be a problem, but there's not really a
+            # lot we can do here.
             pass
-        return reverse('magazine_author_detail', args=[self.pk,])
+        return reverse('magazine_author_detail', args=[self.pk, ])
 
     def get_num_articles(self):
         if not hasattr(self, 'num_articles'):
@@ -61,8 +67,10 @@ class Author(models.Model):
     class Meta:
         ordering = ('surname', 'forename',)
 
+
 def __days_in_month(year, month):
     return calendar.monthrange(year, month)[1]
+
 
 def subtract_n_months(date_val, num_months):
     # Split the number of months to subtract into months and years
@@ -80,18 +88,21 @@ def subtract_n_months(date_val, num_months):
     except ValueError:
         return date(year, month, __days_in_month(year, month))
 
+
 class PublishedIssueManager(models.Manager):
     def get_query_set(self):
-        return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte = date.today(), published = True).annotate(num_articles = Count('article'))
+        return super(PublishedIssueManager, self).get_query_set().filter(issue_date__lte=date.today(), published=True).annotate(num_articles=Count('article'))
+
 
 class IssueManager(models.Manager):
     def get_query_set(self):
         return super(IssueManager, self).get_query_set().annotate(num_articles = Count('article'))
 
+
 class Issue(models.Model):
-    number = models.PositiveIntegerField(help_text = u'The issue number.', unique = True)
-    issue_date = models.DateField(help_text = u'The selected day is ignored - please use the first of the month')
-    published = models.BooleanField(default = True, help_text = u'Uncheck to create an issue which is not yet published.')
+    number = models.PositiveIntegerField(help_text=u'The issue number.', unique=True)
+    issue_date = models.DateField(help_text=u'The selected day is ignored - please use the first of the month')
+    published = models.BooleanField(default=True, help_text=u'Uncheck to create an issue which is not yet published.')
     objects = IssueManager()
     published_objects = PublishedIssueManager()
 
@@ -99,7 +110,7 @@ class Issue(models.Model):
         return u'Issue {0}'.format(self.number)
 
     def save(self, *args, **kwargs):
-        self.issue_date = self.issue_date.replace(day = 1)
+        self.issue_date = self.issue_date.replace(day=1)
         super(Issue, self).save(*args, **kwargs)
 
     def month_year(self):
@@ -114,12 +125,13 @@ class Issue(models.Model):
         if not self.is_published():
             return True
 
-        f = getattr(settings, 'MAGAZINE_IS_EMBARGOED_FUNCTION', embargoed_by_date)
+        f = getattr(settings, 'MAGAZINE_IS_EMBARGOED_FUNCTION',
+                    embargoed_by_date)
 
         return f(self)
 
     def get_absolute_url(self):
-        return reverse('magazine_issue_detail', args=[self.number,])
+        return reverse('magazine_issue_detail', args=[self.number, ])
 
     @staticmethod
     def current_issue():
@@ -133,9 +145,11 @@ class Issue(models.Model):
     class Meta:
         ordering = ('-issue_date',)
 
+
 class ArticleManager(models.Manager):
     def get_query_set(self):
         return super(ArticleManager, self).get_query_set().select_related(u'issue',)
+
 
 class ArticleManagerWithNumAuthors(ArticleManager):
     def get_query_set(self):
@@ -143,21 +157,23 @@ class ArticleManagerWithNumAuthors(ArticleManager):
 
 heading_pattern = re.compile('<(/?)h(\d)>')
 
+
 def increment_heading_tag(match):
     return '<{0}h{1}>'.format(match.group(1), int(match.group(2)) + 1)
 
+
 class Article(models.Model):
-    title = models.CharField(max_length = 250)
-    subheading = models.CharField(max_length = 250, blank = True, null = True)
+    title = models.CharField(max_length=250)
+    subheading = models.CharField(max_length=250, blank=True, null=True)
     authors = models.ManyToManyField(Author)
-    description = models.TextField(blank = True, null = True, help_text = u'Introductory paragraph, if any.')
-    text = models.TextField(blank = True, null = True, help_text = u'Full text of the article.')
-    cleaned_text = models.TextField(blank = True, null = True, help_text = u'Auto-populated from the main body text, and cleaned up.')
-    hits = models.IntegerField(default = 0)
+    description = models.TextField(blank=True, null=True, help_text=u'Introductory paragraph, if any.')
+    text = models.TextField(blank=True, null=True, help_text=u'Full text of the article.')
+    cleaned_text = models.TextField(blank=True, null=True, help_text=u'Auto-populated from the main body text, and cleaned up.')
+    hits = models.IntegerField(default=0)
     issue = models.ForeignKey(Issue)
-    order_in_issue = models.PositiveIntegerField(default = 0)
-    image = ImageField(upload_to = 'magazine', blank = True, null = True)
-    updated = models.DateTimeField(auto_now = True, default = datetime.now(), verbose_name = u'Last Updated')
+    order_in_issue = models.PositiveIntegerField(default=0)
+    image = ImageField(upload_to='magazine', blank=True, null=True)
+    updated = models.DateTimeField(auto_now=True, default=datetime.now(), verbose_name=u'Last Updated')
 
     objects = ArticleManager()
     objects_with_num_authors = ArticleManagerWithNumAuthors()
@@ -166,7 +182,7 @@ class Article(models.Model):
         return self.title
 
     def mark_visited(self):
-        Article.objects.filter(pk = self.pk).update(hits=F('hits') + 1)
+        Article.objects.filter(pk=self.pk).update(hits=F('hits') + 1)
 
     def all_authors(self):
         return self.authors.all()
@@ -197,31 +213,33 @@ class Article(models.Model):
         return heading_pattern.sub(increment_heading_tag, self.cleaned_text)
 
     def get_absolute_url(self):
-        return reverse('magazine_article_detail', args=[self.issue.number,self.pk,])
+        return reverse('magazine_article_detail', args=[self.issue.number, self.pk, ])
 
     class Meta:
         ordering = ('-issue', 'order_in_issue',)
 
+
 class BookReviewManager(models.Manager):
     def get_query_set(self):
-        return super(BookReviewManager, self).get_query_set().select_related(u'issue',)
+        return super(BookReviewManager, self).get_query_set().select_related(u'issue', )
+
 
 class BookReview(models.Model):
-    title = models.CharField(max_length = 250)
+    title = models.CharField(max_length=250)
     authors = models.ManyToManyField(Author)
     issue = models.ForeignKey(Issue)
-    order_in_issue = models.PositiveIntegerField(default = 0)
-    book_author = models.CharField(blank = True, null = True, max_length = 60)
-    publisher = models.CharField(blank = True, null = True, max_length = 60)
-    publisher_location = models.CharField(blank = True, null = True, max_length = 60)
-    publication_date = models.CharField(max_length = 20, blank = True, null = True)
-    num_pages = models.PositiveIntegerField(blank = True, null = True)
-    price = models.CharField(blank = True, null = True, max_length = 250)
-    isbn = models.CharField(blank = True, null = True, max_length = 20, verbose_name = u'ISBN')
-    text = models.TextField(blank = True, null = True, help_text = u'Full text of the review.')
-    cleaned_text = models.TextField(blank = True, null = True, help_text = u'Auto-populated from the main body text, and cleaned up.')
-    hits = models.IntegerField(default = 0)
-    updated = models.DateTimeField(auto_now = True, default = datetime.now(), verbose_name = u'Last Updated')
+    order_in_issue = models.PositiveIntegerField(default=0)
+    book_author = models.CharField(blank=True, null=True, max_length=60)
+    publisher = models.CharField(blank=True, null=True, max_length=60)
+    publisher_location = models.CharField(blank=True, null=True, max_length=60)
+    publication_date = models.CharField(max_length=20, blank=True, null=True)
+    num_pages = models.PositiveIntegerField(blank=True, null=True)
+    price = models.CharField(blank=True, null=True, max_length=250)
+    isbn = models.CharField(blank=True, null=True, max_length=20, verbose_name=u'ISBN')
+    text = models.TextField(blank=True, null=True, help_text=u'Full text of the review.')
+    cleaned_text = models.TextField(blank=True, null=True, help_text=u'Auto-populated from the main body text, and cleaned up.')
+    hits = models.IntegerField(default=0)
+    updated = models.DateTimeField(auto_now=True, default=datetime.now(), verbose_name=u'Last Updated')
 
     objects = BookReviewManager()
 
@@ -232,7 +250,7 @@ class BookReview(models.Model):
         return self.title
 
     def mark_visited(self):
-        BookReview.objects.filter(pk = self.pk).update(hits=F('hits') + 1)
+        BookReview.objects.filter(pk=self.pk).update(hits=F('hits') + 1)
 
     def all_authors(self):
         return self.authors.all()
@@ -252,7 +270,8 @@ class BookReview(models.Model):
         return heading_pattern.sub(increment_heading_tag, self.cleaned_text)
 
     def get_absolute_url(self):
-        return reverse('magazine_bookreview_detail', args=[self.issue.number,self.pk,])
+        return reverse('magazine_bookreview_detail',
+                       args=[self.issue.number, self.pk, ])
 
     class Meta:
         ordering = ('-issue', 'order_in_issue',)
