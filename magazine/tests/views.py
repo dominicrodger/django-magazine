@@ -316,3 +316,6 @@ args=[3, 5]))
 
         response = self.client.get(reverse('magazine_author_articles', args=[self.author_3.pk,]))
         self.assertEqual(response.status_code, 404)
+
+        response = self.client.get(reverse('magazine_author_articles', args=[73,]))
+        self.assertEqual(response.status_code, 404)
