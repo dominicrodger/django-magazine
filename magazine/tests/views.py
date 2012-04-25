@@ -155,36 +155,36 @@ class MagazineGeneralViewsTestCase(TestCase):
         # Check that fetching an article by a non-existent issue
         # number results in a 404.
         response = self.client.get(reverse('magazine_article_detail',
-args=[300, 2]))
+                                           args=[300, 2]))
         self.assertEqual(response.status_code, 404)
 
         # Check that fetching an article that doesn't exist
         # results in a 404.
         response = self.client.get(reverse('magazine_article_detail',
-args=[1, 200]))
+                                           args=[1, 200]))
         self.assertEqual(response.status_code, 404)
 
         # Check that fetching an article for an issue that
         # isn't yet published results in a 404.
         response = self.client.get(reverse('magazine_article_detail',
-args=[2, 4]))
+                                           args=[2, 4]))
         self.assertEqual(response.status_code, 404)
 
         # ... still doesn't work if you login as a regular user
         with LoginGuard(self.client, 'nonstaff'):
             response = self.client.get(reverse('magazine_article_detail',
-args=[2, 4]))
+                                               args=[2, 4]))
             self.assertEqual(response.status_code, 404)
 
         # ... but does if you're logged in as a staff member
         with LoginGuard(self.client, 'staff'):
             response = self.client.get(reverse('magazine_article_detail',
-args=[2, 4]))
+                                               args=[2, 4]))
             self.assertEqual(response.status_code, 200)
 
         # Check that the full text is rendered
         response = self.client.get(reverse('magazine_article_detail',
-args=[1, 2]))
+                                           args=[1, 2]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_1)
         self.assertEqual(response.context['article'], self.article_2)
@@ -197,7 +197,7 @@ args=[1, 2]))
 
         # Check that headings are demoted (h1 -> h2, h2 -> h3 etc)
         response = self.client.get(reverse('magazine_article_detail',
-args=[3, 5]))
+                                           args=[3, 5]))
         self.assertContains(response, '<h2>Heading 1</h2>')
         self.assertContains(response, '<h3>Heading 2</h3>')
         self.assertContains(response, '<h4>Heading 3</h4>')
@@ -295,7 +295,8 @@ args=[3, 5]))
         self.assertTrue(author_2_index > author_1_index)
 
     def testAuthorArticlesListView(self):
-        response = self.client.get(reverse('magazine_author_articles', args=[self.author_1.pk,]))
+        response = self.client.get(reverse('magazine_author_articles',
+                                           args=[self.author_1.pk, ]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.author_1.forename)
         self.assertContains(response, self.article_1.get_absolute_url())
@@ -304,7 +305,8 @@ args=[3, 5]))
         self.assertNotContains(response, self.article_4.get_absolute_url())
         self.assertContains(response, self.article_5.get_absolute_url())
 
-        response = self.client.get(reverse('magazine_author_articles', args=[self.author_2.pk,]))
+        response = self.client.get(reverse('magazine_author_articles',
+                                           args=[self.author_2.pk, ]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.author_2.forename)
         self.assertNotContains(response, self.article_1.get_absolute_url())
@@ -314,8 +316,10 @@ args=[3, 5]))
         self.assertNotContains(response, self.article_4.get_absolute_url())
         self.assertContains(response, self.article_5.get_absolute_url())
 
-        response = self.client.get(reverse('magazine_author_articles', args=[self.author_3.pk,]))
+        response = self.client.get(reverse('magazine_author_articles',
+                                           args=[self.author_3.pk, ]))
         self.assertEqual(response.status_code, 404)
 
-        response = self.client.get(reverse('magazine_author_articles', args=[73,]))
+        response = self.client.get(reverse('magazine_author_articles',
+                                           args=[73, ]))
         self.assertEqual(response.status_code, 404)
