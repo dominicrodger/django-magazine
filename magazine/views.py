@@ -166,8 +166,11 @@ class AuthorArticlesView(ListView):
 
     def get_author(self):
         if not hasattr(self, 'author'):
-            self.author = Author.objects.get(pk=int(self.kwargs['pk']),
-                                             indexable=True)
+            try:
+                self.author = Author.objects.get(pk=int(self.kwargs['pk']),
+                                                 indexable=True)
+            except Author.DoesNotExist:
+                raise Http404
 
         return self.author
 

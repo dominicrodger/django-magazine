@@ -24,6 +24,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.issue_3 = Issue.objects.get(pk=3)
         self.author_1 = Author.objects.get(pk=1)
         self.author_2 = Author.objects.get(pk=2)
+        self.author_3 = Author.objects.get(pk=3)
 
         if not hasattr(self, 'staff_user'):
             self.staff_user = User.objects.create_user('staff',
@@ -292,3 +293,26 @@ args=[3, 5]))
         author_1_index = response.content.index(self.author_1.surname)
         author_2_index = response.content.index(self.author_2.surname)
         self.assertTrue(author_2_index > author_1_index)
+
+    def testAuthorArticlesListView(self):
+        response = self.client.get(reverse('magazine_author_articles', args=[self.author_1.pk,]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.author_1.forename)
+        self.assertContains(response, self.article_1.get_absolute_url())
+        self.assertNotContains(response, self.article_2.get_absolute_url())
+        self.assertNotContains(response, self.article_3.get_absolute_url())
+        self.assertNotContains(response, self.article_4.get_absolute_url())
+        self.assertContains(response, self.article_5.get_absolute_url())
+
+        response = self.client.get(reverse('magazine_author_articles', args=[self.author_2.pk,]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.author_2.forename)
+        self.assertNotContains(response, self.article_1.get_absolute_url())
+        self.assertContains(response, self.article_2.get_absolute_url())
+        self.assertContains(response, self.article_3.get_absolute_url())
+         # By author 2, but not published
+        self.assertNotContains(response, self.article_4.get_absolute_url())
+        self.assertContains(response, self.article_5.get_absolute_url())
+
+        response = self.client.get(reverse('magazine_author_articles', args=[self.author_3.pk,]))
+        self.assertEqual(response.status_code, 404)
