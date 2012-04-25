@@ -22,9 +22,9 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.issue_1 = Issue.objects.get(pk=1)
         self.issue_2 = Issue.objects.get(pk=2)
         self.issue_3 = Issue.objects.get(pk=3)
-        self.author_1 = Author.objects.get(pk=1)
-        self.author_2 = Author.objects.get(pk=2)
-        self.author_3 = Author.objects.get(pk=3)
+        self.paul = Author.objects.get(pk=1)
+        self.dominic = Author.objects.get(pk=2)
+        self.bugs = Author.objects.get(pk=3)
 
         if not hasattr(self, 'staff_user'):
             self.staff_user = User.objects.create_user('staff',
@@ -208,7 +208,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('magazine_author_detail',
                                            args=[1, ]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['author'], self.author_1)
+        self.assertEqual(response.context['author'], self.paul)
         self.assertEqual(list(response.context['articles']),
                          [self.article_5, self.article_1])
         self.assertContains(response, u'Paul Beasley-Murray')
@@ -218,7 +218,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('magazine_author_detail',
                                            args=[2, ]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['author'], self.author_2)
+        self.assertEqual(response.context['author'], self.dominic)
         self.assertEqual(list(response.context['articles']),
                          [self.article_3, self.article_5, self.article_2, ])
         self.assertContains(response, u'Dominic Rodger')
@@ -279,26 +279,26 @@ class MagazineGeneralViewsTestCase(TestCase):
     def testAuthorListView(self):
         response = self.client.get(reverse('magazine_authors'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.author_1.surname)
-        self.assertContains(response, self.author_2.surname)
-        author_1_index = response.content.index(self.author_1.surname)
-        author_2_index = response.content.index(self.author_2.surname)
-        self.assertTrue(author_2_index < author_1_index)
+        self.assertContains(response, self.paul.surname)
+        self.assertContains(response, self.dominic.surname)
+        paul_index = response.content.index(self.paul.surname)
+        dominic_index = response.content.index(self.dominic.surname)
+        self.assertTrue(dominic_index < paul_index)
 
     def testAuthorListViewAlphabetised(self):
         response = self.client.get(reverse('magazine_authors_alphabetised'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.author_1.surname)
-        self.assertContains(response, self.author_2.surname)
-        author_1_index = response.content.index(self.author_1.surname)
-        author_2_index = response.content.index(self.author_2.surname)
-        self.assertTrue(author_2_index > author_1_index)
+        self.assertContains(response, self.paul.surname)
+        self.assertContains(response, self.dominic.surname)
+        paul_index = response.content.index(self.paul.surname)
+        dominic_index = response.content.index(self.dominic.surname)
+        self.assertTrue(dominic_index > paul_index)
 
     def testAuthorArticlesListView(self):
         response = self.client.get(reverse('magazine_author_articles',
-                                           args=[self.author_1.pk, ]))
+                                           args=[self.paul.pk, ]))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.author_1.forename)
+        self.assertContains(response, self.paul.forename)
         self.assertContains(response, self.article_1.get_absolute_url())
         self.assertNotContains(response, self.article_2.get_absolute_url())
         self.assertNotContains(response, self.article_3.get_absolute_url())
@@ -306,9 +306,9 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertContains(response, self.article_5.get_absolute_url())
 
         response = self.client.get(reverse('magazine_author_articles',
-                                           args=[self.author_2.pk, ]))
+                                           args=[self.dominic.pk, ]))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.author_2.forename)
+        self.assertContains(response, self.dominic.forename)
         self.assertNotContains(response, self.article_1.get_absolute_url())
         self.assertContains(response, self.article_2.get_absolute_url())
         self.assertContains(response, self.article_3.get_absolute_url())
@@ -317,7 +317,7 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertContains(response, self.article_5.get_absolute_url())
 
         response = self.client.get(reverse('magazine_author_articles',
-                                           args=[self.author_3.pk, ]))
+                                           args=[self.bugs.pk, ]))
         self.assertEqual(response.status_code, 404)
 
         response = self.client.get(reverse('magazine_author_articles',
