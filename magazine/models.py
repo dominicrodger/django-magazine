@@ -150,7 +150,7 @@ class Issue(models.Model):
 
     @staticmethod
     def current_issue():
-        live_issues = Issue.published_objects.all()
+        live_issues = Issue.published_objects.all()[:1]
 
         if not live_issues:
             return None
