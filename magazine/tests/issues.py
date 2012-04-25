@@ -5,6 +5,11 @@ from django.test import TestCase
 from magazine.models import Issue, subtract_n_months
 
 
+class NoIssuesTestCase(TestCase):
+    def testLiveIssues(self):
+        self.assertEqual(Issue.current_issue(), None)
+
+
 class IssueTestCase(TestCase):
     fixtures = ['test_issues.json', ]
 

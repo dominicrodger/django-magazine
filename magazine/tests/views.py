@@ -274,3 +274,21 @@ args=[3, 5]))
             self.assertEqual(response.status_code, 200)
             self.assertEqual(list(response.context['issues']),
                              [self.issue_3, self.issue_2, self.issue_1])
+
+    def testAuthorListView(self):
+        response = self.client.get(reverse('magazine_authors'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.author_1.surname)
+        self.assertContains(response, self.author_2.surname)
+        author_1_index = response.content.index(self.author_1.surname)
+        author_2_index = response.content.index(self.author_2.surname)
+        self.assertTrue(author_2_index < author_1_index)
+
+    def testAuthorListViewAlphabetised(self):
+        response = self.client.get(reverse('magazine_authors_alphabetised'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.author_1.surname)
+        self.assertContains(response, self.author_2.surname)
+        author_1_index = response.content.index(self.author_1.surname)
+        author_2_index = response.content.index(self.author_2.surname)
+        self.assertTrue(author_2_index > author_1_index)
