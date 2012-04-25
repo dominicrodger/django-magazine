@@ -68,6 +68,6 @@ class AuthorTestCase(TestCase):
                          'Paul Beasley-Murray, Dominic Rodger and Bugs')
         self.assertNotEqual(result.find(self.paul.get_absolute_url()), -1)
         self.assertNotEqual(result.find(self.dom.get_absolute_url()), -1)
-        # Bugs is not indexable, and so should have a link to his profile
+        # Bugs is not indexable, and so should not have a link to his profile
         self.assertEqual(result.find(reverse('magazine_author_detail',
                                              args=[self.bugs.pk, ])), -1)
