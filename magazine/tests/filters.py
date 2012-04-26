@@ -15,13 +15,16 @@ class MagazineFiltersTestCase(TestCase):
         self.article_by_paul = Article.objects.get(pk=1)
         self.article_by_dom_and_paul = Article.objects.get(pk=5)
 
-    def testAmpersands(self):
+    def testAmpersandsNormal(self):
         t = Template("{% load magazine_tags %}{{ title|ampersands }}")
-        c = Context({"title": "Test & Something"})
-        expected = "Test <span class=\"ampersand\">&amp;</span> Something"
-        self.assertEqual(expected, t.render(c))
+        self.assertEqual(t.render(Context({"title": "Normal & Usage"})),
+                         "Normal <span class=\"ampersand\">&amp;</span> Usage")
+        self.assertEqual(t.render(Context({"title": "Normal and Usage"})),
+                         "Normal <span class=\"ampersand\">&amp;</span> Usage")
 
+    def testAmpersandsAutoescape(self):
         t = Template("{% load magazine_tags %}{% autoescape off %}{{ title|ampersands }}{% endautoescape %}")
-        c = Context({"title": "Test & Something"})
-        expected = "Test & Something"
-        self.assertEqual(expected, t.render(c))
+        self.assertEqual(t.render(Context({"title": "Autoescape & Usage"})),
+                         "Autoescape <span class=\"ampersand\">&amp;</span> Usage")
+        self.assertEqual(t.render(Context({"title": "Autoescape and Usage"})),
+                         "Autoescape <span class=\"ampersand\">&amp;</span> Usage")

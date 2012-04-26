@@ -62,6 +62,9 @@ def ampersands(value, autoescape=None):
 
     value = value.replace(' and ', pretty_ampersand)
     value = value.replace(' &amp; ', pretty_ampersand)
+    
+    if not autoescape:
+        value = value.replace(' & ', pretty_ampersand)
 
     return mark_safe(value)
 ampersands.needs_autoescape = True
