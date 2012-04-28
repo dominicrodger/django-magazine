@@ -8,5 +8,7 @@ env:
 install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install -r requirements.txt --use-mirrors
+  - pip install pep8
 script:
+  - pep8 --exclude=migrations magazine
   - ./magazine/example_project/manage.py test magazine
