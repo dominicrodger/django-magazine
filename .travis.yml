@@ -9,4 +9,4 @@ install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install -r requirements.txt --use-mirrors
 script:
-  - ./magazine/example_project/manage.py test
+  - ./magazine/example_project/manage.py test magazine
