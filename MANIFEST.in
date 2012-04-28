@@ -1,3 +1,4 @@
 include README.md
 recursive-include magazine/templates *
 recursive-include magazine/fixtures *
+recursive-include magazine/example_project *
