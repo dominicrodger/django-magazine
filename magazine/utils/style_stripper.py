@@ -4,6 +4,7 @@ from html5lib.sanitizer import HTMLSanitizerMixin
 from html5lib.serializer.htmlserializer import HTMLSerializer
 from html5lib.tokenizer import HTMLTokenizer
 
+
 class StyleSanitizerMixin(HTMLSanitizerMixin):
     def sanitize_token(self, token):
         if not hasattr(self, 'in_style_tag'):
@@ -34,6 +35,7 @@ class StyleSanitizer(HTMLTokenizer, StyleSanitizerMixin):
             token = self.sanitize_token(token)
             if token:
                 yield token
+
 
 def strip_styles(text):
     parser = html5lib.HTMLParser(tokenizer=StyleSanitizer)

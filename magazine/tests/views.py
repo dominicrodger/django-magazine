@@ -42,7 +42,8 @@ class MagazineGeneralViewsTestCase(TestCase):
         response = self.client.get(reverse('magazine_index'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context['current_articles']),
-                         [self.article_by_dom_issue_2, self.article_by_dom_and_paul, ])
+                         [self.article_by_dom_issue_2,
+                          self.article_by_dom_and_paul, ])
         self.assertEqual(response.context['current_issue'], self.issue_2)
         self.assertNotContains(response, self.article_by_paul.teaser())
         self.assertNotContains(response, self.article_by_dom.teaser())
@@ -110,7 +111,8 @@ class MagazineGeneralViewsTestCase(TestCase):
             response = self.client.get(reverse('magazine_issue_detail',
                                                args=[2]))
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.context['issue'], self.issue_3_unpublished)
+            self.assertEqual(response.context['issue'],
+                             self.issue_3_unpublished)
             self.assertEqual(list(response.context['articles']),
                              [self.article_by_dom_unpublished, ])
 
@@ -118,7 +120,8 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['issue'], self.issue_2)
         self.assertEqual(list(response.context['articles']),
-                         [self.article_by_dom_issue_2, self.article_by_dom_and_paul, ])
+                         [self.article_by_dom_issue_2,
+                          self.article_by_dom_and_paul, ])
 
         response = self.client.get(reverse('magazine_issue_detail', args=[4]))
         self.assertEqual(response.status_code, 404)
@@ -132,10 +135,12 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertContains(response, self.article_by_paul.title)
 
         # Check that we've updated hit counts.
-        self.assertEqual(Article.objects.get(pk=self.article_by_paul.pk).hits, 1)
+        self.assertEqual(Article.objects.get(pk=self.article_by_paul.pk).hits,
+                         1)
         response = self.client.get(reverse('magazine_article_detail',
                                            args=[1, 1]))
-        self.assertEqual(Article.objects.get(pk=self.article_by_paul.pk).hits, 2)
+        self.assertEqual(Article.objects.get(pk=self.article_by_paul.pk).hits,
+                         2)
 
         # Check for fetching an article for an issue number where
         # the primary key and the issue number don't line up.
@@ -144,7 +149,8 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # Issue with pk 2 has number 3
         self.assertEqual(response.context['issue'], self.issue_2)
-        self.assertEqual(response.context['article'], self.article_by_dom_issue_2)
+        self.assertEqual(response.context['article'],
+                         self.article_by_dom_issue_2)
 
         # Check that fetching an article by the wrong issue number
         # results in a 404.
@@ -213,18 +219,23 @@ class MagazineGeneralViewsTestCase(TestCase):
                          [self.article_by_dom_and_paul, self.article_by_paul])
         self.assertContains(response, u'Paul Beasley-Murray')
         self.assertContains(response, self.article_by_paul.get_absolute_url())
-        self.assertContains(response, self.article_by_dom_and_paul.get_absolute_url())
+        self.assertContains(response,
+                            self.article_by_dom_and_paul.get_absolute_url())
 
         response = self.client.get(reverse('magazine_author_detail',
                                            args=[2, ]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['author'], self.dominic)
         self.assertEqual(list(response.context['articles']),
-                         [self.article_by_dom_issue_2, self.article_by_dom_and_paul, self.article_by_dom, ])
+                         [self.article_by_dom_issue_2,
+                          self.article_by_dom_and_paul,
+                          self.article_by_dom, ])
         self.assertContains(response, u'Dominic Rodger')
-        self.assertNotContains(response, self.article_by_paul.get_absolute_url())
+        self.assertNotContains(response,
+                               self.article_by_paul.get_absolute_url())
         self.assertContains(response, self.article_by_dom.get_absolute_url())
-        self.assertContains(response, self.article_by_dom_issue_2.get_absolute_url())
+        self.assertContains(response,
+                            self.article_by_dom_issue_2.get_absolute_url())
 
         # Bugs Bunny is not indexable
         response = self.client.get(reverse('magazine_author_detail',
@@ -242,7 +253,9 @@ class MagazineGeneralViewsTestCase(TestCase):
                                                args=[2, ]))
             self.assertEqual(response.status_code, 200)
             self.assertEqual(list(response.context['articles']),
-                             [self.article_by_dom_issue_2, self.article_by_dom_and_paul, self.article_by_dom])
+                             [self.article_by_dom_issue_2,
+                              self.article_by_dom_and_paul,
+                              self.article_by_dom])
 
         # Check that you can see articles from unpublished issues if you're
         # logged in as a staff member
@@ -251,8 +264,10 @@ class MagazineGeneralViewsTestCase(TestCase):
                                                args=[2, ]))
             self.assertEqual(response.status_code, 200)
             self.assertEqual(list(response.context['articles']),
-                             [self.article_by_dom_unpublished, self.article_by_dom_issue_2,
-                              self.article_by_dom_and_paul, self.article_by_dom])
+                             [self.article_by_dom_unpublished,
+                              self.article_by_dom_issue_2,
+                              self.article_by_dom_and_paul,
+                              self.article_by_dom])
 
     def testIssueListView(self):
         response = self.client.get(reverse('magazine_issues'))
@@ -274,7 +289,9 @@ class MagazineGeneralViewsTestCase(TestCase):
             response = self.client.get(reverse('magazine_issues'))
             self.assertEqual(response.status_code, 200)
             self.assertEqual(list(response.context['issues']),
-                             [self.issue_3_unpublished, self.issue_2, self.issue_1])
+                             [self.issue_3_unpublished,
+                              self.issue_2,
+                              self.issue_1])
 
     def testAuthorListView(self):
         response = self.client.get(reverse('magazine_authors'))
@@ -300,21 +317,29 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.paul.forename)
         self.assertContains(response, self.article_by_paul.get_absolute_url())
-        self.assertNotContains(response, self.article_by_dom.get_absolute_url())
-        self.assertNotContains(response, self.article_by_dom_issue_2.get_absolute_url())
-        self.assertNotContains(response, self.article_by_dom_unpublished.get_absolute_url())
-        self.assertContains(response, self.article_by_dom_and_paul.get_absolute_url())
+        self.assertNotContains(response,
+                               self.article_by_dom.get_absolute_url())
+        self.assertNotContains(response,
+                               self.article_by_dom_issue_2.get_absolute_url())
+        self.assertNotContains(response,
+                               self.article_by_dom_unpublished.get_absolute_url())
+        self.assertContains(response,
+                            self.article_by_dom_and_paul.get_absolute_url())
 
         response = self.client.get(reverse('magazine_author_articles',
                                            args=[self.dominic.pk, ]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.dominic.forename)
-        self.assertNotContains(response, self.article_by_paul.get_absolute_url())
+        self.assertNotContains(response,
+                               self.article_by_paul.get_absolute_url())
         self.assertContains(response, self.article_by_dom.get_absolute_url())
-        self.assertContains(response, self.article_by_dom_issue_2.get_absolute_url())
+        self.assertContains(response,
+                            self.article_by_dom_issue_2.get_absolute_url())
          # By author 2, but not published
-        self.assertNotContains(response, self.article_by_dom_unpublished.get_absolute_url())
-        self.assertContains(response, self.article_by_dom_and_paul.get_absolute_url())
+        self.assertNotContains(response,
+                               self.article_by_dom_unpublished.get_absolute_url())
+        self.assertContains(response,
+                            self.article_by_dom_and_paul.get_absolute_url())
 
         response = self.client.get(reverse('magazine_author_articles',
                                            args=[self.bugs.pk, ]))
