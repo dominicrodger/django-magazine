@@ -31,6 +31,10 @@ tests with:
 
 ## Dependencies
 
+django-magazine requires at least Python 2.6, since it uses the newer
+[string formatting syntax][format]. If you need to use Python 2.5,
+feel free to submit a pull request that fixes that.
+
 This app depends on [Bleach](https://github.com/jsocol/bleach), for
 cleaning up submitted HTML (particularly content pasted in from
 Microsoft Word).
@@ -45,3 +49,4 @@ database changes, though you don't have to.
 [django1.3]: https://docs.djangoproject.com/en/dev/releases/1.3/
 [with-tag]: https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#with
 [include-tag]: https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#include
+[format]: http://docs.python.org/whatsnew/2.6.html#pep-3101-advanced-string-formatting "Read about the new string formatting functionality in Python 3.0, backported to Python 2.6"
