@@ -1,3 +1,6 @@
+# Python 2.5 compatability
+from __future__ import with_statement
+
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
