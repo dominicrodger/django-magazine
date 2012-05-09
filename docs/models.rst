@@ -52,3 +52,35 @@ There are two settings relevant to this feature:
                                   is not set, then this will determine
                                   how many months old an issue has to
                                   be before it is no longer embargoed.
+
+If an issue is embargoed, a teaser will be shown. The teaser is either
+the article's description, or the first 50 words of the article.
+
+Article
+-------
+
+Articles are the content of magazines. Each article belongs to an
+issue, and is by one or more authors.
+
+Articles are ordered within an issue, based on the value of
+``order_in_issue`` (articles with lower values are shown first).
+
+.. note::
+    Article text will be cleaned up automatically with bleach_, which
+    strips out bad HTML that tends to be added by programs like
+    Microsoft Word. The only allowed tags are those set by
+    ``bleach.ALLOWED_TAGS``, ``<p>``, and ``<h[1-5]>``.
+
+.. _bleach: https://github.com/jsocol/bleach
+
+Author
+------
+
+Authors have names, and a quick biography.
+
+Sometimes, you don't want users to be able to see a list of articles
+by a particular author (e.g. when importing articles where the author
+is unknown, you might want to attribute the article to "Unknown", so
+that something shows up where the list of authors would normally
+be). To do this, just uncheck the ``indexable`` value of the author.
+
