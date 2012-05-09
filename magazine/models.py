@@ -37,8 +37,8 @@ class Author(models.Model):
     details = models.TextField(blank=True, null=True,
                                help_text=u'Details about the author')
     indexable = models.BooleanField(default=True,
-                                    help_text=u'Select this for authors who '\
-                                        'shouldn\'t have their own page '\
+                                    help_text=u'Deselect this for authors '\
+                                        'who shouldn\'t have their own page '\
                                         '(e.g. "Anonymous")')
 
     objects = AuthorManager()
