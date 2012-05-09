@@ -17,8 +17,8 @@ also need Git_ to clone the repository.
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _Git: http://git-scm.com/
 
-Installing django-magazine
---------------------------
+Trying it out
+-------------
 
 django-magazine ships with an example project so you can see what it
 does quickly. Installation is as follows::
@@ -33,3 +33,18 @@ does quickly. Installation is as follows::
     python manage.py syncdb --noinput
     python manage.py test magazine
     python manage.py runserver
+
+Installing django-magazine
+--------------------------
+
+django-magazine is not yet available on PyPI, but in the mean time you
+can install from GitHub_ like this::
+
+    pip install git+git://github.com/dominicrodger/django-magazine.git
+
+Then add ``magazine`` to your ``INSTALLED_APPS`` setting, and update
+your database using ``syncdb`` or ``migrate`` (if you're using
+South_).
+
+.. _GitHub: https://github.com/dominicrodger/django-magazine
+.. _South: http://south.aeracode.org
