@@ -23,3 +23,4 @@ Contents:
 
    installation
    models
+   templates
