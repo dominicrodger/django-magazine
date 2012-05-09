@@ -30,5 +30,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'tinymce',
     'magazine',
 )
+
+
+def is_embargoed(x):
+    return False
+
+MAGAZINE_IS_EMBARGOED_FUNCTION = is_embargoed
