@@ -1,6 +1,6 @@
 # django-magazine
 
-A semi-pluggable Django app for managing a simple magazine.
+A pluggable Django app for managing a simple magazine.
 
 Magazines consist of Issues, each of which contains one or more
 Articles, which are by one or more Authors.
