@@ -11,7 +11,8 @@ Articles, which are by one or more Authors.
 Get the code
 -------------
 
-The `source <http://github.com/dominicrodger/django-magazine>`_ is available on Github.
+The `source <http://github.com/dominicrodger/django-magazine>`_ is
+available on Github.
 
 Contents:
 ----------
