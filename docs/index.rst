@@ -21,3 +21,4 @@ Contents:
    :glob:
 
    installation
+   models
