@@ -1,0 +1,401 @@
+[
+  {
+    "pk": 1, 
+    "model": "magazine.author", 
+    "fields": {
+      "indexable": true, 
+      "surname": "Rodger", 
+      "details": "Dom is the author of django-magazine.", 
+      "forename": "Dominic"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "magazine.issue", 
+    "fields": {
+      "issue_date": "2012-04-01", 
+      "number": 1, 
+      "published": true
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "magazine.article", 
+    "fields": {
+      "hits": 0, 
+      "description": "I'm not a witch. Oh! Come and see the violence inherent in the system! Help, help, I'm being repressed! \u2026Are you suggesting that coconuts migrate? I dunno. Must be a king. The nose? \u2026Are you suggesting that coconuts migrate?", 
+      "title": "I'm not dead!", 
+      "text": "<p>Ni! Ni! Ni! Ni!</p>\r\n<p>The swallow may fly south with the sun, and the house martin or the plover may seek warmer climes in winter, yet these are not strangers to our land. You don't vote for kings. You don't vote for kings.  Camelot! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time! Burn her anyway!</p>", 
+      "image": "", 
+      "updated": "2012-05-09 14:01:50", 
+      "cleaned_text": "<p>Ni! Ni! Ni! Ni!</p>\n<p>The swallow may fly south with the sun, and the house martin or the plover may seek warmer climes in winter, yet these are not strangers to our land. You don't vote for kings. You don't vote for kings.  Camelot! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time! Burn her anyway!</p>", 
+      "order_in_issue": 0, 
+      "subheading": "Makes Ben Hur look like an Epic!", 
+      "authors": [
+        1
+      ], 
+      "issue": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "magazine.article", 
+    "fields": {
+      "hits": 0, 
+      "description": "It is a silly place. We want a shrubbery!! Shh! Knights, I bid you welcome to your new home. Let us ride to Camelot! Bloody Peasant!", 
+      "title": "We want a shrubbery!!", 
+      "text": "<p>Camelot! &hellip;Are you suggesting that coconuts migrate? Where'd you get the coconuts? Well, she turned me into a newt. Be quiet!</p>\r\n<ol>\r\n<li>Burn her anyway!</li>\r\n<li>She looks like one.</li>\r\n</ol>\r\n<h1>Help, help, I'm being repressed!</h1>\r\n<p>What do you mean? &hellip;Are you suggesting that coconuts migrate? Well, she turned me into a newt. The swallow may fly south with the sun, and the house martin or the plover may seek warmer climes in winter, yet these are not strangers to our land. Bring her forward!</p>", 
+      "image": "", 
+      "updated": "2012-05-09 14:01:13", 
+      "cleaned_text": "<p>Camelot! \u2026Are you suggesting that coconuts migrate? Where'd you get the coconuts? Well, she turned me into a newt. Be quiet!</p>\n<ol>\n<li>Burn her anyway!</li>\n<li>She looks like one.</li>\n</ol>\n<h1>Help, help, I'm being repressed!</h1>\n<p>What do you mean? \u2026Are you suggesting that coconuts migrate? Well, she turned me into a newt. The swallow may fly south with the sun, and the house martin or the plover may seek warmer climes in winter, yet these are not strangers to our land. Bring her forward!</p>", 
+      "order_in_issue": 1, 
+      "subheading": "On second thoughts, let's not go there. ", 
+      "authors": [
+        1
+      ], 
+      "issue": 1
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_logentry", 
+      "name": "Can add log entry", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_logentry", 
+      "name": "Can change log entry", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_logentry", 
+      "name": "Can delete log entry", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_group", 
+      "name": "Can add group", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_group", 
+      "name": "Can change group", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_group", 
+      "name": "Can delete group", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_message", 
+      "name": "Can add message", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_message", 
+      "name": "Can change message", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_message", 
+      "name": "Can delete message", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_permission", 
+      "name": "Can add permission", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_permission", 
+      "name": "Can change permission", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_permission", 
+      "name": "Can delete permission", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_user", 
+      "name": "Can add user", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_user", 
+      "name": "Can change user", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_user", 
+      "name": "Can delete user", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_contenttype", 
+      "name": "Can add content type", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_contenttype", 
+      "name": "Can change content type", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_contenttype", 
+      "name": "Can delete content type", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 31, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_article", 
+      "name": "Can add article", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_article", 
+      "name": "Can change article", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_article", 
+      "name": "Can delete article", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_author", 
+      "name": "Can add author", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_author", 
+      "name": "Can change author", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_author", 
+      "name": "Can delete author", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_bookreview", 
+      "name": "Can add book review", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_bookreview", 
+      "name": "Can change book review", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 36, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_bookreview", 
+      "name": "Can delete book review", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_issue", 
+      "name": "Can add issue", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_issue", 
+      "name": "Can change issue", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_issue", 
+      "name": "Can delete issue", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_session", 
+      "name": "Can add session", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_session", 
+      "name": "Can change session", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_session", 
+      "name": "Can delete session", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_site", 
+      "name": "Can add site", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_site", 
+      "name": "Can change site", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_site", 
+      "name": "Can delete site", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "admin", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2012-05-09 13:42:10", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$e2233$3f12a2411dd84561b2b0f6e03ff1d906fb8a4368", 
+      "email": "test@example.com", 
+      "date_joined": "2012-05-09 13:41:55"
+    }
+  }
+]

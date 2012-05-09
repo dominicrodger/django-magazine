@@ -31,8 +31,14 @@ does quickly. Installation is as follows::
     pip install Django
     cd magazine/example_project
     python manage.py syncdb --noinput
+    python manage.py loaddata sample_magazine_data.json
     python manage.py test magazine
     python manage.py runserver
+
+This'll add a superuser with the username ``admin`` and the password
+``admin``, so you can play around with the admin site, which will be
+at http://127.0.0.1:8000/admin/. It'll also create a sample issue with
+a couple of articles.
 
 Installing django-magazine
 --------------------------
