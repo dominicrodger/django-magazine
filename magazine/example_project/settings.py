@@ -35,11 +35,6 @@ INSTALLED_APPS = (
 )
 
 
-def is_embargoed(x):
-    return False
-
-MAGAZINE_IS_EMBARGOED_FUNCTION = is_embargoed
-
 TINYMCE_DEFAULT_CONFIG = {
     'theme': "advanced",
     'relative_urls': False,
