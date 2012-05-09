@@ -39,3 +39,16 @@ def is_embargoed(x):
     return False
 
 MAGAZINE_IS_EMBARGOED_FUNCTION = is_embargoed
+
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': "advanced",
+    'relative_urls': False,
+    'theme_advanced_toolbar_location': "top",
+    'theme_advanced_buttons1': ("bold,italic,separator,bullist,numlist,"
+                                "separator,blockquote,separator,link,unlink,"
+                                "separator,image,separator,pasteword,cleanup,"
+                                "code"),
+    'theme_advanced_buttons2': "",
+    'theme_advanced_buttons3': "",
+    'plugins': "paste",
+}
