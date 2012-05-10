@@ -1,3 +1,4 @@
 django_magazine.egg-info/
 *.pyc
 docs/_build
+magazine/example_project/dev.db
