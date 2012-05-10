@@ -48,9 +48,9 @@ can install from GitHub_ like this::
 
     pip install git+git://github.com/dominicrodger/django-magazine.git
 
-Then add ``magazine`` to your ``INSTALLED_APPS`` setting, and update
-your database using ``syncdb`` or ``migrate`` (if you're using
-South_).
+Then add ``magazine`` and ``tinymce`` to your ``INSTALLED_APPS``
+setting, and update your database using ``syncdb`` or ``migrate`` (if
+you're using South_).
 
 .. _GitHub: https://github.com/dominicrodger/django-magazine
 .. _South: http://south.aeracode.org
