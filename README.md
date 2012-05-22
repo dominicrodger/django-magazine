@@ -19,6 +19,10 @@ your `INSTALLED_APPS` setting, and add:
 
 to your `urls.py`.
 
+## Documentation
+
+Documentation is available on [Read The Docs][docs].
+
 ## Tests
 
 django-magazine is tested with every push. Our current build status is
@@ -50,3 +54,4 @@ database changes, though you don't have to.
 [with-tag]: https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#with
 [include-tag]: https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#include
 [format]: http://docs.python.org/whatsnew/2.6.html#pep-3101-advanced-string-formatting "Read about the new string formatting functionality in Python 3.0, backported to Python 2.6"
+[docs]: http://django-magazine.readthedocs.org "Read the documentation for django-magazine"
