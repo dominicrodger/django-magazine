@@ -51,7 +51,7 @@ class IssueTestCase(TestCase):
     def testFirstOfMonth(self):
         issue = Issue.objects.create(number=4,
                                      issue_date=date(2010, 4, 30))
-        issue_4 = Issue.objects.get(pk=issue.pk)
+        Issue.objects.get(pk=issue.pk)
         self.assertEqual(issue.issue_date,
                          date(2010, 4, 1))
 
