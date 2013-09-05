@@ -19,5 +19,6 @@ setup(
         "django-tinymce==1.5.1a2",
         "html5lib==0.90",
         "sorl-thumbnail==11.09",
+        "bleach==1.0.4",
     ],
 )
