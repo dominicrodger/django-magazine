@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from magazine.tests.articles import ArticleTestCase
 from magazine.tests.authors import AuthorTestCase
 from magazine.tests.filters import (
