@@ -72,16 +72,16 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertEqual(list(response.context['articles']),
                          [self.article_by_paul, self.article_by_dom])
         self.assertContains(response,
-                            self.article_by_paul.authors.all()[0].\
-                                __unicode__())
+                            self.article_by_paul.authors.all()[0].
+                            __unicode__())
         self.assertContains(response,
                             self.article_by_dom.authors.all()[0].__unicode__())
         self.assertContains(response,
-                            self.article_by_paul.authors.all()[0].\
-                                get_absolute_url())
+                            self.article_by_paul.authors.all()[0].
+                            get_absolute_url())
         self.assertContains(response,
-                            self.article_by_dom.authors.all()[0].\
-                                get_absolute_url())
+                            self.article_by_dom.authors.all()[0].
+                            get_absolute_url())
 
         # Check that changing the order of the articles in an issue affects the
         # order they are rendered.
@@ -325,8 +325,8 @@ class MagazineGeneralViewsTestCase(TestCase):
         self.assertNotContains(response,
                                self.article_by_dom_issue_2.get_absolute_url())
         self.assertNotContains(response,
-                               self.article_by_dom_unpublished.\
-                                   get_absolute_url())
+                               self.article_by_dom_unpublished.
+                               get_absolute_url())
         self.assertContains(response,
                             self.article_by_dom_and_paul.get_absolute_url())
 
@@ -341,8 +341,8 @@ class MagazineGeneralViewsTestCase(TestCase):
                             self.article_by_dom_issue_2.get_absolute_url())
          # By author 2, but not published
         self.assertNotContains(response,
-                               self.article_by_dom_unpublished.\
-                                   get_absolute_url())
+                               self.article_by_dom_unpublished.
+                               get_absolute_url())
         self.assertContains(response,
                             self.article_by_dom_and_paul.get_absolute_url())
 

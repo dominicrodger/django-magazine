@@ -6,7 +6,8 @@ from magazine.views import (CurrentIssueListView, IssueListView, IssueView,
                             BookReviewView, AuthorArticlesView,
                             AuthorBookReviewsView)
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', CurrentIssueListView.as_view(), name='magazine_index'),
     url(r'^issues/$', IssueListView.as_view(), name='magazine_issues'),
     url(r'^issues/(?P<number>([0-9]+))/$', IssueView.as_view(),

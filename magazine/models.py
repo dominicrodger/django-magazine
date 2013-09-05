@@ -36,10 +36,10 @@ class Author(models.Model):
                                help_text=u'The author\'s surname')
     details = models.TextField(blank=True, null=True,
                                help_text=u'Details about the author')
-    indexable = models.BooleanField(default=True,
-                                    help_text=u'Deselect this for authors '\
-                                        'who shouldn\'t have their own page '\
-                                        '(e.g. "Anonymous")')
+    indexable = models.BooleanField(
+        default=True,
+        help_text=(u'Deselect this for authors who shouldn\'t have their own '
+                   u'page (e.g. "Anonymous")'))
 
     objects = AuthorManager()
     plain_objects = models.Manager()
@@ -113,11 +113,14 @@ class IssueManager(models.Manager):
 class Issue(models.Model):
     number = models.PositiveIntegerField(help_text=u'The issue number.',
                                          unique=True)
-    issue_date = models.DateField(help_text=u'The selected day is ignored - '\
-                                      'please use the first of the month')
-    published = models.BooleanField(default=True,
-                                    help_text=u'Uncheck to create an issue '\
-                                        'which is not yet published.')
+    issue_date = models.DateField(
+        help_text=(u'The selected day is ignored - '
+                   u'please use the first of the month')
+    )
+    published = models.BooleanField(
+        default=True,
+        help_text=u'Uncheck to create an issue which is not yet published.'
+    )
     objects = IssueManager()
     published_objects = PublishedIssueManager()
 
@@ -183,14 +186,16 @@ class Article(models.Model):
     title = models.CharField(max_length=250)
     subheading = models.CharField(max_length=250, blank=True, null=True)
     authors = models.ManyToManyField(Author)
-    description = models.TextField(blank=True, null=True,
-                                   help_text=u'Introductory paragraph, if '\
-                                   'any.')
+    description = models.TextField(
+        blank=True, null=True,
+        help_text=u'Introductory paragraph, if any.'
+    )
     text = models.TextField(blank=True, null=True,
                             help_text=u'Full text of the article.')
-    cleaned_text = models.TextField(blank=True, null=True,
-                                    help_text=u'Auto-populated from the main '\
-                                    'body text, and cleaned up.')
+    cleaned_text = models.TextField(
+        blank=True, null=True,
+        help_text=u'Auto-populated from the main body text, and cleaned up.'
+    )
     hits = models.IntegerField(default=0)
     issue = models.ForeignKey(Issue)
     order_in_issue = models.PositiveIntegerField(default=0)
@@ -264,9 +269,10 @@ class BookReview(models.Model):
                             verbose_name=u'ISBN')
     text = models.TextField(blank=True, null=True,
                             help_text=u'Full text of the review.')
-    cleaned_text = models.TextField(blank=True, null=True,
-                                    help_text=u'Auto-populated from the main '\
-                                        'body text, and cleaned up.')
+    cleaned_text = models.TextField(
+        blank=True, null=True,
+        help_text=u'Auto-populated from the main body text, and cleaned up.'
+    )
     hits = models.IntegerField(default=0)
     updated = models.DateTimeField(auto_now=True, default=datetime.now(),
                                    verbose_name=u'Last Updated')
