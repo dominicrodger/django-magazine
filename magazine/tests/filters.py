@@ -1,9 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.template import Context, Template
 from django.template.defaultfilters import striptags
-from django.template.loader import render_to_string
 from django.test import TestCase
-from magazine.models import Author, Issue, Article
+from magazine.models import Author, Article
 from magazine.tests.test_utils import initialise_article_text
 
 

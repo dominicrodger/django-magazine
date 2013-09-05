@@ -1,5 +1,4 @@
-from django.conf.urls.defaults import *
-from magazine.models import Article
+from django.conf.urls.defaults import patterns, url
 from magazine.views import (CurrentIssueListView, IssueListView, IssueView,
                             ArticleView, AuthorListView,
                             AuthorListViewAlphabetised, AuthorDetailView,

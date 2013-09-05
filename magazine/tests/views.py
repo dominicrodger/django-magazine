@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.test.client import Client
 from magazine.models import Author, Issue, Article
 from magazine.tests.test_utils import initialise_article_text, LoginGuard
 
